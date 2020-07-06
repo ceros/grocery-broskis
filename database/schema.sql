@@ -14,13 +14,15 @@ CREATE TABLE `users` (
 CREATE TABLE `lists` (
     `id` BIGINT unsigned NOT NULL AUTO_INCREMENT,
     `user_id` BIGINT unsigned NOT NULL,
+    `shopper_id`    BIGINT unsigned,
     `address`   VARCHAR(512) NOT NULL,
     `status`    VARCHAR(64) NOT NULL, 
     `budget`    DECIMAL(15,2),
     `created_date`  DATETIME NOT NULL,
     `update_date`   DATETIME,
     PRIMARY KEY (`id`),
-    INDEX `user_id` (`user_id`)
+    INDEX `user_id` (`user_id`),
+    INDEX `shopper_id` (`shopper_id`)
 
 );
 
