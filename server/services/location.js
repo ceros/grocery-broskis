@@ -1,6 +1,6 @@
-const axios = require('axios');
+import axios from 'axios';
+import GOOGLE_API_KEY from '../config/development';
 
-const API_KEY = "nopeeking";
 const SEARCH_RADIUS_IN_METERS = 500;
 
 module.exports = class LocationService {
@@ -17,7 +17,7 @@ module.exports = class LocationService {
 
     async getUserLocation() {
         try {
-            const response = await axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=' + API_KEY);
+            const response = await axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=' + GOOGLE_API_KEY);
             return response;
         }
         catch (error) {
@@ -27,7 +27,7 @@ module.exports = class LocationService {
     }
 
     async findNearbyStores(latitude, longitude){
-        const nearbyGroceryStoresUrl = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=${API_KEY}&inputtype=textquery&input=grocery&fields=name,types&locationbias=circle:${SEARCH_RADIUS_IN_METERS}@${latitude},${longitude}`;
+        const nearbyGroceryStoresUrl = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=${GOOGLE_API_KEY}&inputtype=textquery&input=grocery&fields=name,types&locationbias=circle:${SEARCH_RADIUS_IN_METERS}@${latitude},${longitude}`;
 
         try {
             let validResults = [];
