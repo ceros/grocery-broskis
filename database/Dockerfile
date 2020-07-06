@@ -1,6 +1,6 @@
 FROM mysql/mysql-server:5.7
 
-ENV MYSQL_DATABASE='peer_review' \
+ENV MYSQL_DATABASE='grocery_run' \
     MYSQL_ROOT_PASSWORD='password'
 
 ADD schema.sql /docker-entrypoint-initdb.d

@@ -40,8 +40,10 @@ From the root project directory:
 
 ```
 $ docker build -t grocery .
-$ docker run -d -p 3000:3000 --name grocery grocery 
+$ docker run -d -p 8080:8080 -e NODE_ENV="development" --name grocery grocery 
 ```
+
+To connect to the docker container, you'll need to point your browser to `http://localhost:8080`.
 
 When you're done, make sure to clean up the two docker containers:
 
