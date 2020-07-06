@@ -10,17 +10,28 @@
  * of the api as we make changes and leave past versions still accessible.
  **************************************************************************************************/
 const express = require('express');
+const jwt = require('express-jwt');
 
 module.exports = function(database, config) {
+	const authMiddleware = jwt({secret: config.secret, algorithms: ['RS256']});
     const router = express.Router();
+
 
     /******************************************************************************
      *          User REST Routes
      ******************************************************************************/
     const UserController = require('./controllers/users');
     const userController = new UserController(database);
+    const SessionController = require('./controllers/session');
+	const sessionController = new SessionController(config, database);
 
-    // Get a list of all users.
+	const checkSession = function(request, response, next) {
+		authMiddleware(request, response, async function(request, response) {
+			await sessionController.checkSession(request, response, next);
+		});
+	};
+    
+	// Get a list of all users.
     router.get('/users', function(request, response) {
         userController.getUsers(request, response);
     });
@@ -49,6 +60,15 @@ module.exports = function(database, config) {
     router.delete('/users/:id', function(request, response) {
         userController.deleteUser(request, response);
     });
+	
+	router.get('/users/me', checkSession, function(request, response) {
+		user.Controller.currentUser(request, response);
+	});
+
+	// Authenticate an user.
+	router.post('/authenticate', function(request, response) {
+		sessionController.authenticate(request, response);
+	});
 
     return router;
 };
