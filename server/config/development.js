@@ -14,7 +14,7 @@ module.exports = {
         host: '172.17.0.2',
         user: 'app',
         password: 'local-development',
-        name: 'peer_review' 
+        name: 'grocery_run' 
     },
     // What level of logging do we want?  Not used at the moment.
     log_level: 'debug'

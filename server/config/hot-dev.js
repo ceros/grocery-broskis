@@ -14,7 +14,7 @@ module.exports = {
         host: 'localhost',
         user: 'app',
         password: 'local-development',
-        name: 'peer_review' 
+        name: 'grocery_run' 
     },
     log_level: 'debug'
 
