@@ -1,6 +1,9 @@
 import React from 'react';
-import RegisterUser from './containers/RegisterUser.js';
 import './app.css';
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import RegistrationForm from "./containers/RegisterUser";
+import WelcomeScreen from "./components/WelcomeScreen";
+import ListCreator from "./containers/CreateList";
 
 /**
  * App component acts as the root for the component tree, loading the layout and all other
@@ -28,7 +31,19 @@ export default class App extends React.Component {
             <section className="app">
                 <header>
                     <h1>Grocery</h1>
-                    <RegisterUser />
+                    <Router>
+                        <Switch>
+                            <Route path="/signup">
+                                <RegistrationForm />
+                            </Route>
+                            <Route exact path="/">
+                                <WelcomeScreen />
+                            </Route>
+                            <Route path="/new-list">
+                                <ListCreator />
+                            </Route>
+                        </Switch>
+                    </Router>
                 </header>
             </section>
         );
