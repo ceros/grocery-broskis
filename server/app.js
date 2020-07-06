@@ -19,9 +19,12 @@ var mysql = require('mysql');
 // the configuration values.
 //
 // For sturcture, see config/default.js
+console.log('Loading config...');
 var config = require('./config');
 
+
 // Initialize the database connection with settings from our configuration file.
+console.log('Connecting to the database...');
 var connection = mysql.createConnection({
     host: config.database.host,
     user: config.database.user,
@@ -29,6 +32,7 @@ var connection = mysql.createConnection({
     database: config.database.name 
 });
 connection.connect();
+
 
 // Load express.
 var app = express();
@@ -42,24 +46,38 @@ var app = express();
 //
 // And actually looking a little more closely, that crash might be because we render an error view
 // down below in the error handler.  I'll sort it out later.
+console.log('Loading the view engine...');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
+
+console.log('Using a logger...');
 // Use a development logger.
 app.use(logger('dev'));
 
+
+console.log('Loading middle ware...');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'dist')));
+
+const static_path = path.join(__dirname, '../dist');
+app.use(express.static(static_path));
+
+console.log('Serving static content from ' + static_path + '.');
+
 
 // Get the api router, pre-wired up to the controllers.
 const router = require('./router')(connection, config);
 
+
 // Load our router at the ``/api/v0/`` route.  This allows us to version our api. If,
 // in the future, we want to release an updated version of the api, we can load it at
 // ``/api/v1/`` and so on, with out impacting the old versions of the router.
+console.log('Loading the router...');
 app.use('/api/0.0.0/', router);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -67,6 +85,7 @@ app.use(function(req, res, next) {
 });
 
 // error handler
+console.log('Loading Error handler...');
 app.use(function(err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
@@ -79,5 +98,6 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+
 
 module.exports = app;
