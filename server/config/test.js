@@ -1,8 +1,9 @@
 /**************************************************************************************************
- *          Default Configuration
+ *          Test Configuration
  *
- * This is a default configuration file with dummy or null values to lay out the structure of the 
- * configuration file.
+ * A configuration file to be used with the unit tests.  
+ *
+ * PLEASE ONLY PLACE DUMMY VALUES IN HERE: NO ACTUAL SECRETS.
  *
  **************************************************************************************************/
 
