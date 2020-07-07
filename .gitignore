@@ -3,3 +3,4 @@ node_modules/*
 server/config/development.js
 server/config/hot-dev.js
 .idea
+.env

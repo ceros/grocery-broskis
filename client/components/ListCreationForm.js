@@ -1,6 +1,7 @@
 import React from 'react';
 import {ListItem} from "./ListItem";
 import {withRouter} from 'react-router';
+import {AddressInput} from "./AddressInput";
 
 export const ListCreationForm = withRouter(class extends React.Component {
     constructor() {
@@ -8,7 +9,8 @@ export const ListCreationForm = withRouter(class extends React.Component {
 
         this.state = {
             items: [],
-            budget: 0
+            budget: 0,
+            address: ''
         };
     }
 
@@ -68,7 +70,7 @@ export const ListCreationForm = withRouter(class extends React.Component {
 
     async onSubmit() {
         try {
-            await this.props.onSubmit(this.state.items, this.state.budget);
+            await this.props.onSubmit(this.state.items, this.state.budget, this.state.address);
             this.props.history.push('/');
         } catch (e) {
             console.error(e);
@@ -95,6 +97,12 @@ export const ListCreationForm = withRouter(class extends React.Component {
     }
 
     render() {
+        if (!this.state.address) {
+            return (
+                <AddressInput onSelect={(address) => this.setState({ address })}></AddressInput>
+            );
+        }
+
         return (
             <div>
                 <table>
