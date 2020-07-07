@@ -18,7 +18,7 @@ module.exports = class LocationService {
     async getUserLocation() {
         try {
             const response = await axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=' + GOOGLE_API_KEY);
-            return response;
+            return response.data;
         }
         catch (error) {
             console.log(error);
