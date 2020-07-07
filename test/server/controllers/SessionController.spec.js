@@ -2,6 +2,7 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 
 const jwt = require("jsonwebtoken");
+const query = require('../../../server/helpers/query.js');
 const SessionController = require('../../../server/controllers/session.js');
 const AuthenticationService = require('../../../server/services/authentication.js');
 
@@ -13,12 +14,15 @@ describe('SessionController', function() {
 	let request;
 	let response;
 	let database;
+	let queryResponse;
 
 	const config = { session: { secret : 'secret', expiresIn: '1h' } };
 
 	beforeEach(function() {
+
+		queryResponse = [];
 		
-		database = { query : function() { return [] } };
+		database = { query : function(database, query, callback) { callback(false, queryResponse) } };
 		
 		request = {};
 	
@@ -79,7 +83,7 @@ describe('SessionController', function() {
 		const nextSpy = sinon.spy();
 
 		request.user = { id: 12 }
-		database.query = function() { return [user] };
+		queryResponse.push(user);
         await sessionController.checkSession(request, response, nextSpy);
         
 		expect(request.user).to.equal(user);
@@ -96,8 +100,8 @@ describe('SessionController', function() {
 				password: 'secret'
 			};
 
-			user = { id: 11, password: 'anothersecret' } 
-			database.query = function() { return [ user ] };
+			user = { id: 11, password: 'anothersecret' }
+			queryResponse.push(user);
 		});
 		
 		describe('Should send message invalid credentials with 403 status', function() {
@@ -114,7 +118,7 @@ describe('SessionController', function() {
 
 			it('When email and password are on request but user does not exist', async function() {
 
-				database.query = function() { return [ ] };
+				queryResponse.length = 0;
             	await sessionController.authenticate(request, response);
 
             	expect(statusSpy.calledWith(403)).to.equal(true);
