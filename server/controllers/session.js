@@ -7,6 +7,7 @@
 
 const jwt = require("jsonwebtoken");
 const AuthenticationService = require('../services/authentication');
+const query = require('../helpers/query');
 
 module.exports = class SessionController {
 
@@ -21,7 +22,7 @@ module.exports = class SessionController {
 		let user;
 
 		if ( request.user ) {
-			const result = await this.database.query('SELECT * from users where id = ?', [request.user.id]);
+			const result = await query.promisy(this.database, 'SELECT * from users where id = ?', [request.user.id]);
 			user = result[0];
 		}
 
@@ -40,12 +41,12 @@ module.exports = class SessionController {
 	
 		const { email, password } = request.body;
 
-		if ( email && password ) { 
-			const result = await this.database.query('SELECT * from users where email = ?', [email]);
+		if ( email && password ) {
+			const result = await query.promisy(this.database, 'SELECT * from users where email = ?', [email]);
 			user = result[0];
 		}
 
-		if ( ! user || ! this.auth.checkPassword(password, user.password) ) {
+		if ( ! user || ! await this.auth.checkPassword(password, user.password) ) {
 			response.status(403).json({ message: 'invalid credentials' });
 			return;
 		}
