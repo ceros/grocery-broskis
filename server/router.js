@@ -13,7 +13,7 @@ const express = require('express');
 const jwt = require('express-jwt');
 
 module.exports = function(database, config) {
-	const authMiddleware = jwt({secret: config.secret, algorithms: ['RS256']});
+	const authMiddleware = jwt({secret: config.session.secret, algorithms: ['RS256']});
     const router = express.Router();
 
 
