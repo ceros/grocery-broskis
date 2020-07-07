@@ -44,6 +44,25 @@ describe('LocationService', function() {
             expect(validResults.length).to.equal(1);
             expect(validResults[0].name).to.equal(successfulResponse.candidates[0].name);
         });
+
+        it('returns an empty array on a non-200 response', async function(){
+            const findPlaceUri = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json";
+            const findPlaceUrl = new RegExp(`${findPlaceUri}\?.+`);
+            axiosMock.onPost(findPlaceUrl).reply(400, "Bad Request");
+
+            const results = await locationService.findNearbyStores("fakeLat", "fakeLng");
+            expect(results.length).to.equal(0);
+        });
+
+        it('returns an empty array on a 200 response with a non-OK status from google', async function(){
+            const findPlaceUri = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json";
+            const findPlaceUrl = new RegExp(`${findPlaceUri}\?.+`);
+            successfulResponse.status = "ZERO_RESULTS";
+            axiosMock.onPost(findPlaceUrl).reply(200, successfulResponse);
+
+            const results = await locationService.findNearbyStores("fakeLat", "fakeLng");
+            expect(results.length).to.equal(0);
+        });
     })
 
 });

@@ -59,7 +59,7 @@ module.exports = class LocationService {
         }
         catch (error) {
             console.log(error);
-            return null;
+            return [];
         }
     }
 }
