@@ -1,5 +1,7 @@
 import React from 'react';
 import PlacesAutocomplete from 'react-places-autocomplete';
+import Input from "@material-ui/core/TextField";
+import InputLabel from "@material-ui/core/InputLabel";
 
 export class AddressInput extends React.Component {
     constructor(props) {
@@ -24,10 +26,11 @@ export class AddressInput extends React.Component {
                 debounce={200}
             >
                 {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                    <div>
-                        <input
+                    <div className="address-input">
+                        <InputLabel>Where would you like the items delivered?</InputLabel>
+                        <Input
                             {...getInputProps({
-                                placeholder: 'Where would you like the items delivered?',
+                                placeholder: 'Enter address...',
                                 className: 'location-search-input',
                             })}
                         />

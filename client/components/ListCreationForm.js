@@ -1,5 +1,9 @@
 import React from 'react';
-import {ListItem} from "./ListItem";
+import ReactDOM from 'react-dom';
+
+import MaterialTable from "material-table";
+import Button from '@material-ui/core/Button';
+import NumberFormat from 'react-number-format';
 import {withRouter} from 'react-router';
 import {AddressInput} from "./AddressInput";
 
@@ -14,47 +18,25 @@ export const ListCreationForm = withRouter(class extends React.Component {
         };
     }
 
-    onItemAdd() {
+    async onItemAdd(row,  metadata) {
         this.setState({
-            items: this.state.items.concat({})
+            items: this.state.items.concat({
+              ...row,
+            })
         });
     }
 
-    onItemRemove(rowIndex) {
-        return (() => {
-            this.setState({
-                items: this.state.items.slice(0, rowIndex).concat(this.state.items.slice(rowIndex + 1))
-            });
-        }).bind(this)
+    async onItemRemove(metadata) {
+        this.setState({
+            items: this.state.items.slice(0, metadata.tableData.id).concat(this.state.items.slice(metadata.tableData.id + 1))
+        });
     }
 
-    onDescriptionChange(rowIndex) {
-        return ((e) => {
-            const oldItem = this.state.items[rowIndex];
-            this.updateItem(rowIndex, e.target.value, oldItem.quantity, oldItem.replaceable);
-        }).bind(this)
-    }
-
-    onQuantityChange(rowIndex) {
-        return ((e) => {
-            const oldItem = this.state.items[rowIndex];
-            this.updateItem(rowIndex, oldItem.description, e.target.value, oldItem.replaceable);
-        }).bind(this)
-    }
-
-    onToggleReplaceable(rowIndex) {
-        return ((e) => {
-            const oldItem = this.state.items[rowIndex];
-            this.updateItem(rowIndex, oldItem.description, oldItem.quantity, !oldItem.replaceable);
-        }).bind(this);
-    }
-
-    updateItem(index, description, quantity, replaceable) {
+    async onItemUpdate(row, metadata) {
         const newItems = this.state.items.slice();
-        newItems[index] = {
-            quantity,
-            description,
-            replaceable
+        newItems[metadata.tableData.id] = {
+          ...row,
+          replaceable: String(row.replaceable).toLowerCase() === 'true'
         };
 
         this.setState({
@@ -64,7 +46,7 @@ export const ListCreationForm = withRouter(class extends React.Component {
 
     onBudgetChange(newBudget) {
         this.setState({
-            budget: Number.parseFloat(newBudget)
+            budget: newBudget.floatValue
         })
     }
 
@@ -77,25 +59,6 @@ export const ListCreationForm = withRouter(class extends React.Component {
         }
     }
 
-    renderItems() {
-        const items = [];
-        for (let i = 0; i < this.state.items.length; ++i) {
-            const item = this.state.items[i];
-            items.push(
-                <ListItem
-                    description={item.description || ''}
-                    quantity={item.quantity || 1}
-                    onDescriptionChange={this.onDescriptionChange(i)}
-                    onQuantityChange={this.onQuantityChange(i)}
-                    onRemove={this.onItemRemove(i)}
-                    onToggleReplaceable={this.onToggleReplaceable(i)}
-                    key={i} />
-            );
-        }
-
-        return items;
-    }
-
     render() {
         if (!this.state.address) {
             return (
@@ -105,19 +68,27 @@ export const ListCreationForm = withRouter(class extends React.Component {
 
         return (
             <div>
-                <table>
-                    <thead>
-                        <tr><th>Requested Item</th><th>Quantity</th><th>Permission to Improvise?</th><th></th></tr>
-                    </thead>
-                    <tbody>
-                        {this.renderItems()}
-                    </tbody>
-                </table>
-                <button onClick={this.onItemAdd.bind(this)}>+</button>
+                <MaterialTable
+                  title="Create new shopping list"
+                  data={this.state.items}
+                  columns={[
+                    { title: 'Requested Item', field: 'description' },
+                    { title: 'Quantity', field: 'quantity' },
+                    { title: 'Permission to Improvise?', field: 'replaceable', initialEditValue: true, lookup: { true: 'Yes', false: 'No' } }
+                  ]}
+                  editable={{
+                    isEditable: () => true,
+                    isEditHidden: () => false,
+                    isDeletable: () => true,
+                    isDeleteHidden: () => false,
+                    onRowAdd: this.onItemAdd.bind(this),
+                    onRowDelete: this.onItemRemove.bind(this),
+                    onRowUpdate: this.onItemUpdate.bind(this)
+                  }}/>
                 <label>What is the maximum you are willing to spend for these items?
-                    $<input type="number" step="0.01" min="0" onChange={this.onBudgetChange.bind(this)} />
+                    <NumberFormat onValueChange={this.onBudgetChange.bind(this)} allowNegative={false} prefix="$" decimalScale="2" fixedDecimalScale={true} />
                 </label>
-                <button onClick={this.onSubmit.bind(this)}>Submit</button>
+                <Button onClick={this.onSubmit.bind(this)} variant="contained" color="primary" className="pronounced">Submit</Button>
             </div>
         );
     }
