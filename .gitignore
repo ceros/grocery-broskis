@@ -1,3 +1,5 @@
 node_modules/*
 *.swp
 .idea
+server/config/development.js
+server/config/hot-dev.js
