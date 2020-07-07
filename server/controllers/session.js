@@ -11,21 +11,25 @@ const AuthenticationService = require('../services/authentication');
 module.exports = class SessionController {
 
     constructor(config, database) {
-		this.secret = config.secret;
+		this.config = config.session;
         this.database = database;
         this.auth = new AuthenticationService();
     }
 
 	async checkSession(request, response, next) {
-
+		
 		let user;
 
-		if ( req.user ) {
-			result = await database.query('SELECT * from users where id = ?', [request.user.id]);
+		if ( request.user ) {
+			const result = await this.database.query('SELECT * from users where id = ?', [request.user.id]);
 			user = result[0];
 		}
 
-		if ( ! user ) return response.status(401).json({ message: 'user not found, not verified or not enabled' });
+		if ( ! user ) {
+			response.status(401).json({ message: 'user not found, not verified or not enabled' });
+			return;
+		}
+
 		request.user = user;
 		next();
 	}
@@ -36,16 +40,17 @@ module.exports = class SessionController {
 	
 		const { email, password } = request.body;
 
-		if ( email ) { 
-			result = await database.query('SELECT * from users where email = ?', [email]);
+		if ( email && password ) { 
+			const result = await this.database.query('SELECT * from users where email = ?', [email]);
 			user = result[0];
 		}
 
-		if ( ! user || ! this.auth.checkPassword.isValidPassword(password, user.password) ) {
-			return response.status(403).json({ message: 'invalid credentials' });
+		if ( ! user || ! this.auth.checkPassword(password, user.password) ) {
+			response.status(403).json({ message: 'invalid credentials' });
+			return;
 		}
 
-		const token = jwt.sign({ id: user.id }, this.secret, { expiresIn: '5h' });
+		const token = jwt.sign({ id: user.id }, this.config.secret, { expiresIn: this.config.expiresIn });
 		response.status(200).json({ message: 'success', token: token, user: { id: user.id }});
 	}
 }
