@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import NumberFormat from 'react-number-format';
 import {withRouter} from 'react-router';
 import {AddressInput} from "./AddressInput";
+import {getCoordinatesForAddress} from "../utils/geocoding";
 
 export const ListCreationForm = withRouter(class extends React.Component {
     constructor() {
@@ -14,7 +15,9 @@ export const ListCreationForm = withRouter(class extends React.Component {
         this.state = {
             items: [],
             budget: 0,
-            address: ''
+            address: '',
+            latitude: null,
+            longitude: null
         };
     }
 
@@ -52,17 +55,31 @@ export const ListCreationForm = withRouter(class extends React.Component {
 
     async onSubmit() {
         try {
-            await this.props.onSubmit(this.state.items, this.state.budget, this.state.address);
+            await this.props.onSubmit(this.state.items, this.state.budget, this.state.address, this.state.latitude, this.state.longitude);
             this.props.history.push('/');
         } catch (e) {
             console.error(e);
         }
     }
 
+    async onSelectAddress(address) {
+        let lat, lng;
+        const coordinates = await getCoordinatesForAddress(address);
+        if (coordinates){
+            lat = coordinates.lat;
+            lng = coordinates.lng;
+        }
+        this.setState({ 
+            address : address,
+            latitude : lat,
+            longitude : lng
+        });
+    }
+
     render() {
         if (!this.state.address) {
             return (
-                <AddressInput onSelect={(address) => this.setState({ address })}></AddressInput>
+                <AddressInput onSelect={this.onSelectAddress.bind(this)}></AddressInput>
             );
         }
 

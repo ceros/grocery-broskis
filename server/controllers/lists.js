@@ -6,6 +6,7 @@ class ListController {
     }
 
     async createList(req, res, next) {
+        console.log('got here');
         if (!req.body.items || !req.body.items.length) {
             return;
         } else if (!req.body.address) {
@@ -23,8 +24,10 @@ class ListController {
                     created_date=now(),
                     status="${ListController.LIST_STATUS.UNCLAIMED}",
                     budget=?,
-                    address=?
-                `, [req.params.user, req.body.budget || null, req.body.address],
+                    address=?,
+                    latitude=?,
+                    longitude=?
+                `, [req.params.user, req.body.budget || null, req.body.address, req.body.latitude, req.body.longitude],
                 (err, results) => {
                     if (err) {
                         return this.database.rollback(() => {
