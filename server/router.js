@@ -13,7 +13,7 @@ const express = require('express');
 const jwt = require('express-jwt');
 
 module.exports = function(database, config) {
-	const authMiddleware = jwt({secret: config.session.secret, algorithms: ['RS256']});
+	const authMiddleware = jwt({secret: config.session.secret, algorithms: ['HS256']});
     const router = express.Router();
 
 
@@ -25,12 +25,16 @@ module.exports = function(database, config) {
     const SessionController = require('./controllers/session');
 	const sessionController = new SessionController(config, database);
 
-	const checkSession = function(request, response, next) {
-		authMiddleware(request, response, async function(request, response) {
+	const checkSession = async function(request, response, next) {
+		await authMiddleware(request, response, async function() {
 			await sessionController.checkSession(request, response, next);
 		});
 	};
-    
+	
+	router.get('/users/me', checkSession, function(request, response) {
+		userController.currentUser(request, response);
+	});
+
 	// Get a list of all users.
     router.get('/users', function(request, response) {
         userController.getUsers(request, response);
@@ -60,10 +64,6 @@ module.exports = function(database, config) {
     router.delete('/users/:id', function(request, response) {
         userController.deleteUser(request, response);
     });
-	
-	router.get('/users/me', checkSession, function(request, response) {
-		user.Controller.currentUser(request, response);
-	});
 
 	// Authenticate an user.
 	router.post('/authenticate', function(request, response) {
