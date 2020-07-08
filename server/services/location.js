@@ -1,5 +1,4 @@
 import axios from 'axios';
-const config = require('../config');
 
 module.exports = class LocationService {
 
@@ -9,7 +8,7 @@ module.exports = class LocationService {
     }
 
     async findNearbyStores(zipcode){
-        const nearbyGroceryStoresUrl = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=${config.GOOGLE_API_KEY}&inputtype=textquery&input=grocery%20${zipcode}&fields=name,types`;
+        const nearbyGroceryStoresUrl = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=${process.env.GOOGLE_API_KEY}&inputtype=textquery&input=grocery%20${zipcode}&fields=name,types`;
 
         try {
             let validResults = [];
