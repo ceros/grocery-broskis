@@ -1,0 +1,23 @@
+a.pronounced {
+    width: 50%;
+    display: block;
+    margin-left: 25%;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.registration-form .input {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.address-input {
+    width: 50%;
+    display: block;
+    margin-top: 10%;
+    margin-left: 25%;
+}
+
+.address-input * {
+    width: 100%;
+}
