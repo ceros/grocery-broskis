@@ -24,6 +24,12 @@ export const receiveCurrentUser = function(user) {
     }
 }
 
+export const LOGOUT_CURRENT_USER = 'LOGOUT_CURRENT_USER';
+export const logoutCurrentUser = function() {
+    return {
+        type: LOGOUT_CURRENT_USER,
+    }
+}
 /**
  * A thunk action creator to post a user to the backend and retrieve the
  * complete user (with ID) in response.  It then calls recieveUser() to add the
@@ -69,6 +75,7 @@ export const loginUser = function(user) {
         })
         .then(function(session) {
 			history.push('/');
+			dispatch(getMe());
         }).catch(function(err) {
 			console.log(err);
   		});
@@ -77,8 +84,14 @@ export const loginUser = function(user) {
 }
 
 export const logoutUser = function() {
-	localStorage.removeItem('user');
-	location.reload(true);
+	return function(dispatch) {
+		localStorage.removeItem('user');
+		history.push('/login');
+
+		if ( dispatch ) {
+			dispatch(logoutCurrentUser());
+		}
+	}
 }
 
 export const getMe = function() {
@@ -94,7 +107,10 @@ export const getMe = function() {
 			.then(function(user) {
 				dispatch(receiveCurrentUser(user));
 				return user;
-			});
+			}).catch(function(err) {
+				console.log(err);
+  			});
+;
 	}
 }
 
@@ -107,8 +123,7 @@ function handleResponse(response) {
         const data = text && JSON.parse(text);
         if (!response.ok) {
             if (response.status === 401) {
-                logout();
-                location.reload(true);
+                logoutUser();
             }
 
             const message = (data && data.message) || response.statusText;

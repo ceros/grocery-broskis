@@ -2,68 +2,52 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {history} from '../helpers/history.js';
 import { postUser } from '../actions/users.js';
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import {withRouter} from 'react-router';
 
 class RegistrationForm extends React.Component { 
 
     constructor(props) {
         super(props);
-        this.state = {
-            name: '',
-            email: '',
-            password: '',
-            confirmPassword: ''
+
+      this.onSubmit = this.onSubmit.bind(this);
+
+      this.state = {
+          user: props.user
         };
-
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
     }
 
-    handleInputChange(event) {
-        const name = event.target.name;
-        const value = event.target.value;
-
-        this.setState({
-            [name]:  value
-        });
+    componentDidUpdate(prevProps, prevState, snapshot) {
+      if (this.props.user) {
+        this.props.history.push('/');
+      }
     }
 
-    onSubmit(event) {
+  onSubmit(event) {
         event.preventDefault();
-        this.props.onSubmit(this.state);
+        const formData = {};
+        for (const input of event.target) {
+          if (input.name) {
+            formData[input.name] = input.value;
+          }
+        }
+
+        this.props.onSubmit(formData);
     }
 
     render() {
         return (
-            <form onSubmit={this.onSubmit}>
-                <label htmlFor="name">Name:</label>
-                <input type="text" 
-                    name="name" 
-                    value={this.state.name} 
-                    onChange={this.handleInputChange} />
-                <label htmlFor="email">Email:</label>
-                <input type="text" 
-                    name="email" 
-                    value={this.state.email}
-                    onChange={this.handleInputChange} />
-                <label htmlFor="password">Password:</label>
-                <input type="password" 
-                    name="password" 
-                    value={this.state.password}
-                    onChange={this.handleInputChange} />
-                <label htmlFor="confirmPassword">Confirm Password:</label>
-                <input type="password" 
-                    name="confirmPassword"
-                    value={this.state.confirmPassword}
-                    onChange={this.handleInputChange} />
-                <input type="submit" name="register" value="Register" />
-				<button
-    				type="button"
-    				onClick={() => history.push('/login')}>
-    				Login
-  				</button>
+            <form onSubmit={this.onSubmit} className="registration-form">
+                <TextField className="input" type="text" name="name" label="Name" />
+                <TextField className="input" type="text" name="email" label="Email" />
+                <TextField className="input" type="password" name="password" label="Password" />
+                <TextField className="input" type="password" name="confirmPassword" label="Confirm Password" />
+                <Button type="submit" color="primary" variant="contained">Register</Button>
+				<Button type="button" onClick={() => history.push('/login')}>Login</Button>
             </form>
         );
     }
 }
 
-export default RegistrationForm;
+export default withRouter(RegistrationForm);

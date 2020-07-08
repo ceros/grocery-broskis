@@ -6,9 +6,11 @@ import {history} from './helpers/history.js';
 import usersReducer from './reducers/users.js';
 import {PrivateRoute} from './components/PrivateRoute.js';
 import RegisterUser from './containers/RegisterUser.js';
-import SamplePage from './containers/SamplePage.js';
 import LoginUser from './containers/LoginUser.js';
 import './app.css';
+import WelcomeScreen from "./containers/WelcomeScreen";
+import ListCreator from "./containers/CreateList";
+import Header from "./containers/Header";
 
 const middlewares = [thunk];
 createStore(usersReducer, applyMiddleware(...middlewares));
@@ -37,15 +39,16 @@ export default class App extends React.Component {
         return (
             <section className="app">
                 <header>
-                    <h1>Grocery</h1>
-                    	<Router history={history}>
-							<PrivateRoute exact path="/" component={SamplePage} />
-                            <Route path="/register">
-                                <RegisterUser />
-                            </Route>
-                            <Route exact path="/login">
-                                <LoginUser />
-                            </Route>
+                    <Header />
+                    <Router history={history}>
+						<PrivateRoute exact path="/" component={WelcomeScreen} />
+						<PrivateRoute exact path="/new-list" component={ListCreator} />
+                        <Route path="/register">
+                        	<RegisterUser />
+                        </Route>
+                        <Route exact path="/login">
+                             <LoginUser />
+                        </Route>
                     </Router>        
                 </header>
             </section>

@@ -1,13 +1,18 @@
-import { RECIEVE_USER, RECIEVE_CURRENT_USER } from '../actions/users.js';
+import { RECIEVE_USER, RECIEVE_CURRENT_USER, LOGOUT_CURRENT_USER } from '../actions/users.js';
 
 export default function users(state = {}, action) {
     switch (action.type) {
         case RECIEVE_USER:
-            return Object.assign({}, state, { [action.user.id]: action.user });
+			return Object.assign({}, state, { [action.user.id]: action.user });
 		case RECIEVE_CURRENT_USER:
 			return {
                 ...state,
                 current: action.user
+            }
+		case LOGOUT_CURRENT_USER:
+			return {
+                ...state,
+                current: {}
             }
         default:
             return state;
