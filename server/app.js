@@ -13,23 +13,14 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mysql = require('mysql');
 
-// Load our configuration file.  Loads the index.js file from the config/ directory which
-// then uses the NODE_ENV variable to determine what environment we're running in and
-// load the appropriate configuration.  Configuration is a Javascript object containing
-// the configuration values.
-//
-// For sturcture, see config/default.js
-console.log('Loading config...');
-var config = require('./config');
-
 
 // Initialize the database connection with settings from our configuration file.
 console.log('Connecting to the database...');
 var connection = mysql.createConnection({
-    host: config.database.host,
-    user: config.database.user,
-    password: config.database.password,
-    database: config.database.name 
+    host: process.env.database_host,
+    user: process.env.database_user,
+    password: process.env.database_password,
+    database: process.env.database_name 
 });
 connection.connect();
 
