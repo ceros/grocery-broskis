@@ -1,3 +1,5 @@
+import {history} from '../helpers/history.js';
+import {authHeader} from '../helpers/auth-header.js';
 
 const backend = '/api/0.0.0';
 
@@ -13,6 +15,14 @@ export const recieveUser = function(user) {
         user: user
     };
 };
+
+export const RECIEVE_CURRENT_USER = 'RECEIVE_CURRENT_USER';
+export const receiveCurrentUser = function(user) {
+    return {
+        type: RECIEVE_CURRENT_USER,
+        user: user
+    }
+}
 
 /**
  * A thunk action creator to post a user to the backend and retrieve the
@@ -37,3 +47,74 @@ export const recieveUser = function(user) {
     };
 };
 
+/**
+ * Authenticate the user on the backend
+ */
+export const loginUser = function(user) {
+    return function(dispatch) {
+        return fetch(backend + '/authenticate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+		.then(handleResponse)
+        .then(function(session) {
+			if (session.token) {
+                localStorage.setItem('user', JSON.stringify({ token: session.token, id: session.user.id }));
+            }
+
+            return session;
+        })
+        .then(function(session) {
+			history.push('/');
+        }).catch(function(err) {
+			console.log(err);
+  		});
+    };
+
+}
+
+export const logoutUser = function() {
+	localStorage.removeItem('user');
+	location.reload(true);
+}
+
+export const getMe = function() {
+
+	return function(dispatch) {
+    	const requestOptions = {
+        	method: 'GET',
+        	headers: authHeader()
+    	};
+
+   		return fetch(backend + '/users/me', requestOptions)
+			.then(handleResponse)
+			.then(function(user) {
+				dispatch(receiveCurrentUser(user));
+				return user;
+			});
+	}
+}
+
+/**
+ * Handle response and errors
+ */
+
+function handleResponse(response) {
+    return response.text().then(text => {
+        const data = text && JSON.parse(text);
+        if (!response.ok) {
+            if (response.status === 401) {
+                logout();
+                location.reload(true);
+            }
+
+            const message = (data && data.message) || response.statusText;
+            return Promise.reject({ code: response.status, message: message });
+        }
+
+        return data;
+    });
+}
