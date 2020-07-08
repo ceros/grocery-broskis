@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {history} from '../helpers/history.js';
 import { postUser } from '../actions/users.js';
 
 class RegistrationForm extends React.Component { 
@@ -55,6 +56,11 @@ class RegistrationForm extends React.Component {
                     value={this.state.confirmPassword}
                     onChange={this.handleInputChange} />
                 <input type="submit" name="register" value="Register" />
+				<button
+    				type="button"
+    				onClick={() => history.push('/login')}>
+    				Login
+  				</button>
             </form>
         );
     }
