@@ -1,8 +1,6 @@
 node_modules/*
 *.swp
-<<<<<<< HEAD
 server/config/development.js
 server/config/hot-dev.js
-=======
 .idea
->>>>>>> origin/welcome-screen
+.env

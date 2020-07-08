@@ -3,6 +3,10 @@ import {connect} from 'react-redux';
 import { postUser } from '../actions/users.js';
 import RegistrationForm from '../components/RegistrationForm.js';
 
+const mapStateToProps = state => ({
+    user: state.users.user
+});
+
 const mapDispatchToProps = function(dispatch) {
     return {
         onSubmit: function(state) {
@@ -22,6 +26,6 @@ const mapDispatchToProps = function(dispatch) {
 };
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(RegistrationForm);

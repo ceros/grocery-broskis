@@ -1,7 +1,7 @@
 export const SUBMIT_LIST = 'SUBMIT_LIST';
-export const submitList = (items, budget) => (dispatch, getState) => {
-    const { user, deliveryAddress } = getState();
-    return fetch(`/api/0.0.0/users/${user.id}/lists`, {
+export const submitList = (items, budget, deliveryAddress) => (dispatch, getState) => {
+    const { users } = getState();
+    return fetch(`/api/0.0.0/users/${users.user.id}/lists`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

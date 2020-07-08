@@ -2,7 +2,7 @@ import React from 'react';
 import './app.css';
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import RegistrationForm from "./containers/RegisterUser";
-import WelcomeScreen from "./components/WelcomeScreen";
+import WelcomeScreen from "./containers/WelcomeScreen";
 import ListCreator from "./containers/CreateList";
 
 /**
