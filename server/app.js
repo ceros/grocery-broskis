@@ -23,7 +23,6 @@ var connection = mysql.createConnection({
 });
 connection.connect();
 
-
 // Load express.
 var app = express();
 
@@ -58,7 +57,7 @@ console.log('Serving static content from ' + static_path + '.');
 
 
 // Get the api router, pre-wired up to the controllers.
-const router = require('./router')(connection);
+const router = require('./router')(connection, { session: { secret: process.env.SESSION_SECRET, expiresIn: process.env.SESSION_EXPIRES_IN } });
 
 
 // Load our router at the ``/api/v0/`` route.  This allows us to version our api. If,
