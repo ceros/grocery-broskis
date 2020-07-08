@@ -1,4 +1,3 @@
 node_modules/*
 *.swp
-server/config/development.js
-server/config/hot-dev.js
+*.env
