@@ -1,42 +1,33 @@
-import axios from 'axios';
+const axios = require('axios');
 
 module.exports = class LocationService {
+    constructor() {
+        this.storeTypes = [
+            "supermarket",
+            "grocery_or_supermarket",
+            "convenience_store"
+        ];
+    }
 
-    async isNearAStore(zipcode) {
-        const nearbyStores = await this.findNearbyStores(zipcode);
+    async isNearAStore(location) {
+        const nearbyStores = await this.findNearbyStores(location);
         return nearbyStores && nearbyStores.length > 0;
     }
 
-    async findNearbyStores(zipcode){
-        const nearbyGroceryStoresUrl = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=${process.env.GOOGLE_API_KEY}&inputtype=textquery&input=grocery%20${zipcode}&fields=name,types`;
+    async findNearbyStores(coordinates) {
+        const nearbyGroceryStoresUrls = this.storeTypes.map(
+          type => `https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=${process.env.GOOGLE_API_KEY}&location=${coordinates}&type=${type}&rankby=distance`
+        );
 
         try {
-            let validResults = [];
-
-            const response = await axios.post(nearbyGroceryStoresUrl);
-
-            // this is the status of the actual http response
-            if (response.status !== 200){
-                console.log("Status: " + response.status);
-                return validResults;
+            const stores = await Promise.all(nearbyGroceryStoresUrls.map(async url => axios.post(url)));
+            const flattenedStores = stores.flat().map(result => result.data && result.data.results).flat();
+            const storesByPlaceId = {};
+            for (const store of flattenedStores) {
+                storesByPlaceId[store.place_id] = store;
             }
 
-            // this is the google api's status field
-            if (response.data.status !== "OK"){
-                console.log("API Status: " + response.data.status);
-                return validResults;
-            }
-
-            for (const candidate of response.data.candidates){
-                const types = candidate.types;
-                if (types.includes("supermarket") ||
-                    types.includes("grocery_or_supermarket") ||
-                    types.includes("convenience_store")){
-                        validResults.push(candidate);
-                    }
-            }
-
-            return validResults;
+            return Object.values(storesByPlaceId);
         }
         catch (error) {
             console.error(error);
