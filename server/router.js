@@ -50,5 +50,11 @@ module.exports = function(database, config) {
         userController.deleteUser(request, response);
     });
 
+
+    const ListController = require('./controllers/lists');
+    const listController = new ListController(database);
+
+    router.post('/users/:user/lists', listController.createList.bind(listController));
+
     return router;
 };
