@@ -11,7 +11,7 @@
  **************************************************************************************************/
 const express = require('express');
 
-module.exports = function(database, config) {
+module.exports = function(database) {
     const router = express.Router();
 
     /******************************************************************************
@@ -49,6 +49,12 @@ module.exports = function(database, config) {
     router.delete('/users/:id', function(request, response) {
         userController.deleteUser(request, response);
     });
+
+
+    const ListController = require('./controllers/lists');
+    const listController = new ListController(database);
+
+    router.post('/users/:user/lists', listController.createList.bind(listController));
 
     return router;
 };
