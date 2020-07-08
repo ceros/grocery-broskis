@@ -1,33 +1,15 @@
 import axios from 'axios';
-import GOOGLE_API_KEY from '../config/development';
-
-const SEARCH_RADIUS_IN_METERS = 500;
+const config = require('../config');
 
 module.exports = class LocationService {
-    constructor() {}
 
-    async isNearAStore() {
-        const userLocation = await this.getUserLocation();
-        if (!userLocation){
-            return false;
-        }
-        const nearbyStores = await this.findNearbyStores(userLocation.lat, userLocation.lng);
+    async isNearAStore(zipcode) {
+        const nearbyStores = await this.findNearbyStores(zipcode);
         return nearbyStores && nearbyStores.length > 0;
     }
 
-    async getUserLocation() {
-        try {
-            const response = await axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=' + GOOGLE_API_KEY);
-            return response.data;
-        }
-        catch (error) {
-            console.log(error);
-            return null;
-        }
-    }
-
-    async findNearbyStores(latitude, longitude){
-        const nearbyGroceryStoresUrl = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=${GOOGLE_API_KEY}&inputtype=textquery&input=grocery&fields=name,types&locationbias=circle:${SEARCH_RADIUS_IN_METERS}@${latitude},${longitude}`;
+    async findNearbyStores(zipcode){
+        const nearbyGroceryStoresUrl = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=${config.GOOGLE_API_KEY}&inputtype=textquery&input=grocery%20${zipcode}&fields=name,types`;
 
         try {
             let validResults = [];
@@ -42,7 +24,7 @@ module.exports = class LocationService {
 
             // this is the google api's status field
             if (response.data.status !== "OK"){
-                console.log("Status: " + response.data.status);
+                console.log("API Status: " + response.data.status);
                 return validResults;
             }
 
@@ -58,7 +40,7 @@ module.exports = class LocationService {
             return validResults;
         }
         catch (error) {
-            console.log(error);
+            console.error(error);
             return [];
         }
     }
