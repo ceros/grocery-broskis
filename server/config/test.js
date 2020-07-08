@@ -15,5 +15,6 @@ module.exports = {
         password: null,
         name: null
     },
-    log_level: "info"
+    log_level: "info",
+    GOOGLE_API_KEY : "fake_key"
 };

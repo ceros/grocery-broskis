@@ -12,7 +12,8 @@
     "test": "mocha --require @babel/register --preset babel --file test/setup.js 'test/**/*.spec.js'"
   },
   "dependencies": {
-    "bcrypt": "^4.0.0",
+    "axios": "^0.19.2",
+    "bcrypt": "^5.0.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
@@ -35,6 +36,7 @@
     "@babel/preset-env": "^7.7.7",
     "@babel/preset-react": "^7.7.4",
     "@babel/register": "^7.8.3",
+    "axios-mock-adapter": "^1.18.1",
     "babel-loader": "^8.0.6",
     "chai": "^4.2.0",
     "clean-webpack-plugin": "^0.1.19",
