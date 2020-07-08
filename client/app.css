@@ -1,23 +1,41 @@
-a.pronounced {
-    width: 50%;
-    display: block;
-    margin-left: 25%;
-    margin-bottom: 20px;
+html, body {
+    overflow: hidden;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+
+.app {
+    min-height: 100vh;
+    min-width: 100vh;
+    margin: 0;
+}
+
+.blue {
+    background-color: #402BE9;
+}
+
+.login {
     text-align: center;
+    text-transform: uppercase;
+    color: white;
 }
 
-.registration-form .input {
-    display: block;
-    margin-bottom: 20px;
+.logo-container {
+    display: flex;
+    justify-content: center;
 }
 
-.address-input {
-    width: 50%;
-    display: block;
-    margin-top: 10%;
-    margin-left: 25%;
-}
-
-.address-input * {
-    width: 100%;
+.logo {
+    width: 196px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }

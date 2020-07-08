@@ -2,7 +2,7 @@ import React from 'react';
 import './app.css';
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import RegistrationForm from "./containers/RegisterUser";
-import WelcomeScreen from "./containers/WelcomeScreen";
+import LoginScreen from "./components/LoginScreen";
 import ListCreator from "./containers/CreateList";
 
 /**
@@ -28,23 +28,20 @@ export default class App extends React.Component {
      */
     render() {
         return (
-            <section className="app">
-                <header>
-                    <h1>Grocery</h1>
-                    <Router>
-                        <Switch>
-                            <Route path="/signup">
-                                <RegistrationForm />
-                            </Route>
-                            <Route exact path="/">
-                                <WelcomeScreen />
-                            </Route>
-                            <Route path="/new-list">
-                                <ListCreator />
-                            </Route>
-                        </Switch>
-                    </Router>
-                </header>
+            <section className="app blue">
+                <Router>
+                    <Switch>
+                        <Route path="/signup">
+                            <RegistrationForm />
+                        </Route>
+                        <Route exact path="/">
+                            <LoginScreen />
+                        </Route>
+                        <Route path="/new-list">
+                            <ListCreator />
+                        </Route>
+                    </Switch>
+                </Router>
             </section>
         );
     }
