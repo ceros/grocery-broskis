@@ -13,14 +13,13 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mysql = require('mysql');
 
-
-// Initialize the database connection with settings from our configuration file.
+// Initialize the database connection with settings from our environment configuration.
 console.log('Connecting to the database...');
 var connection = mysql.createConnection({
-    host: process.env.database_host,
-    user: process.env.database_user,
-    password: process.env.database_password,
-    database: process.env.database_name 
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME 
 });
 connection.connect();
 
@@ -59,7 +58,7 @@ console.log('Serving static content from ' + static_path + '.');
 
 
 // Get the api router, pre-wired up to the controllers.
-const router = require('./router')(connection, config);
+const router = require('./router')(connection);
 
 
 // Load our router at the ``/api/v0/`` route.  This allows us to version our api. If,
