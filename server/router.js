@@ -11,7 +11,7 @@
  **************************************************************************************************/
 const express = require('express');
 
-module.exports = function(database, config) {
+module.exports = function(database) {
     const router = express.Router();
 
     /******************************************************************************
