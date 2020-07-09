@@ -37,4 +37,9 @@ CREATE TABLE `items` (
     INDEX `list_id` (`list_id`)
 );
 
-
+CREATE TABLE `list_stores` (
+    `list_id` BIGINT unsigned,
+    `store_place_id` VARCHAR(64),
+    INDEX list_store (list_id, store_place_id),
+    FOREIGN KEY (list_id) REFERENCES lists(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
