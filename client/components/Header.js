@@ -31,7 +31,7 @@ class Header extends React.Component {
             <form onSubmit={this.onSubmit} className="logout-form">
 				<h1>Grocery</h1>
 				<div className="user">
-					<p>Wellcome <strong>{user.name}</strong> | <input type="submit" name="logout" value="Logout" /></p>
+					<p>Welcome <strong>{user.name}</strong> | <input type="submit" name="logout" value="Logout" /></p>
 				</div>
             </form>
         );

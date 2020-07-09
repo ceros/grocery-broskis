@@ -8,18 +8,18 @@ const backend = '/api/0.0.0';
  * the store.  Assumes we're getting the user from the backend, so the user
  * must have an `id` property.
  */
-export const RECIEVE_USER = 'RECIEVE_USER';
-export const recieveUser = function(user) { 
+export const RECEIVE_USER = 'RECEIVE_USER';
+export const receiveUser = function(user) { 
     return {
-        type: RECIEVE_USER,
+        type: RECEIVE_USER,
         user: user
     };
 };
 
-export const RECIEVE_CURRENT_USER = 'RECEIVE_CURRENT_USER';
+export const RECEIVE_CURRENT_USER = 'RECEIVE_CURRENT_USER';
 export const receiveCurrentUser = function(user) {
     return {
-        type: RECIEVE_CURRENT_USER,
+        type: RECEIVE_CURRENT_USER,
         user: user
     }
 }
@@ -32,7 +32,7 @@ export const logoutCurrentUser = function() {
 }
 /**
  * A thunk action creator to post a user to the backend and retrieve the
- * complete user (with ID) in response.  It then calls recieveUser() to add the
+ * complete user (with ID) in response.  It then calls receiveUser() to add the
  * user to our store.
  */
  export const postUser = function(user) { 
@@ -48,7 +48,7 @@ export const logoutCurrentUser = function() {
                 return response.json()
         })
         .then(function(user) {
-            dispatch(recieveUser(user));
+            dispatch(receiveUser(user));
         });
     };
 };
