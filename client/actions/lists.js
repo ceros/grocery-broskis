@@ -1,12 +1,20 @@
 export const SUBMIT_LIST = 'SUBMIT_LIST';
+<<<<<<< HEAD
 export const submitList = (items, budget, deliveryAddress, latitude, longitude) => (dispatch, getState) => {
+=======
+export const submitList = (items, budget, deliveryAddress, preferredStorePlaceIds) => (dispatch, getState) => {
+>>>>>>> master
     const { users } = getState();
     return fetch(`/api/0.0.0/users/${users.current.id}/lists`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
+<<<<<<< HEAD
         body: JSON.stringify({ items, budget, address: deliveryAddress, latitude, longitude })
+=======
+        body: JSON.stringify({ items, budget, address: deliveryAddress, preferredStores: preferredStorePlaceIds })
+>>>>>>> master
     }).then((res) => {
         if (!res.ok) {
             throw new Error(res.statusText);

@@ -79,5 +79,11 @@ module.exports = function(database, config) {
         listController.getListsNearCoordinates(request, response);
     });
 
+    
+    const StoreController = require('./controllers/stores');
+    const storeController = new StoreController(database);
+
+    router.get('/nearby-stores', storeController.listNearbyStores.bind(storeController));
+
     return router;
 };

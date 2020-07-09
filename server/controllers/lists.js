@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const util = require('util');
 
 class ListController {
     constructor(database) {
@@ -37,12 +38,14 @@ class ListController {
             return next('Property "address" is required on request body');
         }
 
-        this.database.beginTransaction((err) => {
-            if (err) {
-                return next(err);
-            }
+        const beginTransaction = util.promisify(this.database.beginTransaction.bind(this.database));
+        const rollback = util.promisify(this.database.rollback.bind(this.database));
+        const commit = util.promisify(this.database.commit.bind(this.database));
+        const query = util.promisify(this.database.query.bind(this.database));
 
-            this.database.query(
+        try {
+            await beginTransaction();
+            const results = await query(
                 `INSERT INTO lists
                  SET user_id=?,
                     created_date=now(),
@@ -51,46 +54,45 @@ class ListController {
                     address=?,
                     latitude=?,
                     longitude=?
-                `, [req.params.user, req.body.budget || null, req.body.address, req.body.latitude, req.body.longitude],
-                (err, results) => {
-                    if (err) {
-                        return this.database.rollback(() => {
-                            next('Failed to create new shopping list');
-                        })
-                    }
-
-                    const rows = [];
-                    for (const item of req.body.items) {
-                        if (!item.description || !item.quantity) {
-                            return this.database.rollback(() => {
-                                next('All list items must have quantities and descriptions');
-                            })
-                        }
-
-                        rows.push(`(${results.insertId}, ${mysql.escape(item.description)}, ${!!item.replaceable || false}, now())`);
-                    }
-
-                    this.database.query(`INSERT INTO items (list_id, description, replaceable, created_date) VALUES ${rows.join(',')}`, (err) => {
-                        if (err) {
-                            return this.database.rollback(() => {
-                                next('Failed to create new shopping list items');
-                            })
-                        }
-
-                        this.database.commit(() => {
-                            res.send({
-                                listId: results.insertId
-                            })
-                        })
-                    });
-                }
+                `, [req.params.user, req.body.budget || null, req.body.address, req.body.latitude, req.body.longitude]
             );
-        })
+
+            const rows = [];
+            for (const item of req.body.items) {
+                if (!item.description || !item.quantity) {
+                    throw new Error('All list items must have quantities and descriptions');
+                }
+
+                rows.push(`(${results.insertId}, ${mysql.escape(item.description)}, ${!!item.replaceable || false}, now())`);
+            }
+
+            await query(`INSERT INTO items (list_id, description, replaceable, created_date) VALUES ${rows.join(',')}`);
+            await this.assignPreferredStores(results.insertId, req.body.preferredStores);
+            await commit();
+
+            res.send({
+                listId: results.insertId
+            })
+        } catch (e) {
+            await rollback().then(() => next(e)).catch(next);
+        }
+    }
+
+    assignPreferredStores(listId, preferredStores = []) {
+        if (!preferredStores || !preferredStores.length) {
+            return;
+        }
+
+        const sql =
+            `INSERT INTO list_stores (list_id, store_place_id)
+            VALUES ${preferredStores.map(() => '(' + listId + ',?)').join(',')}`;
+
+        return util.promisify(this.database.query.bind(this.database))(sql, preferredStores);
     }
 }
 
 ListController.LIST_STATUS = {
     UNCLAIMED: 'unclaimed'
-}
+};
 
 module.exports = ListController;
