@@ -153,4 +153,19 @@ module.exports = class UserController {
             }
         );
     }
+
+	/**
+     * GET /user/me
+     *
+     * Show current user.
+     */
+    currentUser(request, response) {
+		const user = request.user;
+		response.json({
+			id: user.id,
+			name: user.name,
+			email: user.email,
+			created_date: user.created_date
+		});
+    }
 }; 

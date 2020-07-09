@@ -2,7 +2,7 @@ import users from './users.js'
 import lists from './lists.js'
 
 const initialState = {
-    users: {},
+    users: { current: {} },
     lists: []
 };
 
