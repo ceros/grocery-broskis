@@ -70,6 +70,7 @@ class ListController {
 		const result = await query(`SELECT
 							u.name,
 							l.user_id,
+							l.budget,
 							l.address,
 							l.created_date,
 							i.list_id,
@@ -92,6 +93,7 @@ class ListController {
 				list = {
 					id: item.list_id,
 					user: { id: item.user_id, name: item.name },
+					budget: item.budget,
 					created_date: item.created_date,
 					address: item.address,
 					items: []
