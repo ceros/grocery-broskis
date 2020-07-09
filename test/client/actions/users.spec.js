@@ -15,7 +15,7 @@ afterEach(function() {
 
 describe('In actions/users.js', function() {
     describe('the `recieveUser(user)` action creator', function() {
-        it('should return a correctly formed RECIEVE_USER action object', function() {
+        it('should return a correctly formed RECEIVE_USER action object', function() {
             let user = {
                 id: 1,
                 name: 'John Doe',
@@ -23,16 +23,16 @@ describe('In actions/users.js', function() {
             };
 
             let expectedAction = {
-                type: actions.RECIEVE_USER,
+                type: actions.RECEIVE_USER,
                 user: user
             };
 
-            expect(actions.recieveUser(user)).to.eql(expectedAction);
+            expect(actions.receiveUser(user)).to.eql(expectedAction);
         });
     });
 
     describe('the `postUser(user)` thunk action creator', function() {
-        it('should POST the /users endpoint with the user in the body and then dispatch RECIEVE_USER', function() { 
+        it('should POST the /users endpoint with the user in the body and then dispatch RECEIVE_USER', function() {
             const user = {
                 name: 'John Doe',
                 email: 'john.doe@email.com',
@@ -60,7 +60,7 @@ describe('In actions/users.js', function() {
             fetchMock.catch(404);
 
             const expectedActions = [
-                { type: actions.RECIEVE_USER, user: returnedUser }
+                { type: actions.RECEIVE_USER, user: returnedUser }
             ];
             const store = mockStore({
                 users: {}
