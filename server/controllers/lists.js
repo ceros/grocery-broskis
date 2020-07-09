@@ -17,8 +17,6 @@ class ListController {
         AND longitude BETWEEN ${req.body.longitude - 0.5} AND ${req.body.longitude + 0.5}
     `;
 
-        console.log(selectQuery);
-
         this.database.query(
             selectQuery,
             (err, results) => {
