@@ -1,20 +1,27 @@
-import React, {useState} from 'react';
-import {withRouter, useHistory} from 'react-router';
+import React from "react";
+import Button from "@material-ui/core/Button";
 import {Link} from "react-router-dom";
-import Button from '@material-ui/core/Button';
+import Logo from "./Logo";
+import { ButtonGroup } from "@material-ui/core";
 
-export default withRouter((props) => {
-   if (!props.user) {
-       useHistory().push('/signup');
-       return null;
-   }
-
-    return (
-        <div>
-            <Button className="pronounced" component={Link} to="/new-list"
-                    variant="contained" color="primary">Create new list</Button>
-            <Button className="pronounced" component={Link} to="/lists"
-                    variant="contained" color="secondary">Shop for a Neighbor</Button>
+export default props => {
+  return (
+    <div className="login">
+      <h1 className="main-header">Groceros</h1>
+      <main>
+        <Logo backgroundColor="#402BE9" />
+        <div className="headers">
+          Keeping our community safe by helping shop for the people in need
         </div>
-    );
-});
+        <div className="about-link">
+          <Button variant="text" color="inherit" component={Link} to="/about">How does it work?</Button>
+        </div>
+        <ButtonGroup orientation="vertical" className="buttons" color="inherit" aria-label="vertical outlined primary button group">
+        <Button variant="outlined" size="large" component={Link} to="/login">Login</Button>
+        <Button variant="outlined"  size="large" component={Link} to="/signup">Register</Button>
+        </ButtonGroup>
+      </main>
+    </div>
+
+  );
+};
