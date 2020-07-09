@@ -13,10 +13,10 @@ class ListController {
             return next('Property "address" is required on request body');
         }
 
-        const beginTransaction = util.promisify(this.database.beginTransaction);
-        const rollback = util.promisify(this.database.rollback);
-        const commit = util.promisify(this.database.commit);
-        const query = util.promisify(this.database.query);
+        const beginTransaction = util.promisify(this.database.beginTransaction.bind(this.database));
+        const rollback = util.promisify(this.database.rollback.bind(this.database));
+        const commit = util.promisify(this.database.commit.bind(this.database));
+        const query = util.promisify(this.database.query.bind(this.database));
 
         try {
             await beginTransaction();
@@ -33,8 +33,7 @@ class ListController {
             const rows = [];
             for (const item of req.body.items) {
                 if (!item.description || !item.quantity) {
-                    await rollback();
-                    return next('All list items must have quantities and descriptions');
+                    throw new Error('All list items must have quantities and descriptions');
                 }
 
                 rows.push(`(${results.insertId}, ${mysql.escape(item.description)}, ${!!item.replaceable || false}, now())`);
@@ -57,13 +56,16 @@ class ListController {
             return;
         }
 
-        const sql = `INSERT INTO list_stores (list_id, store_place_id) VALUES ${preferredStores.map(() => '(' + listId + ',?)').join(',')}`;
-        return util.promisify(this.database.query)(sql, preferredStores);
+        const sql =
+            `INSERT INTO list_stores (list_id, store_place_id)
+            VALUES ${preferredStores.map(() => '(' + listId + ',?)').join(',')}`;
+
+        return util.promisify(this.database.query.bind(this.database))(sql, preferredStores);
     }
 }
 
 ListController.LIST_STATUS = {
     UNCLAIMED: 'unclaimed'
-}
+};
 
 module.exports = ListController;

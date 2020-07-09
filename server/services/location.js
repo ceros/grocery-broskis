@@ -16,7 +16,7 @@ module.exports = class LocationService {
 
     async findNearbyStores(coordinates) {
         const nearbyGroceryStoresUrls = this.storeTypes.map(
-          type => `https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=${process.env.GOOGLE_API_KEY}&location=${coordinates}&type=${type}&rankby=distance`
+          type => `https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=${process.env.GOOGLE_API_KEY}&location=${encodeURIComponent(coordinates)}&type=${type}&rankby=distance`
         );
 
         try {
