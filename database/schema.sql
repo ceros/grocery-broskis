@@ -30,6 +30,7 @@ CREATE TABLE `items` (
     `id` BIGINT unsigned NOT NULL AUTO_INCREMENT,
     `list_id`   BIGINT unsigned NOT NULL,
     `description`   VARCHAR(256) NOT NULL,
+    `quantity` VARCHAR(24) NOT NULL,
     `replaceable`   BOOLEAN NOT NULL,
     `created_date`  DATETIME NOT NULL,
     `update_date`   DATETIME,

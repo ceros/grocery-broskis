@@ -36,10 +36,10 @@ class ListController {
                     throw new Error('All list items must have quantities and descriptions');
                 }
 
-                rows.push(`(${results.insertId}, ${mysql.escape(item.description)}, ${!!item.replaceable || false}, now())`);
+                rows.push(`(${results.insertId}, ${mysql.escape(item.description)}, ${mysql.escape(item.quantity)}, ${!!item.replaceable || false}, now())`);
             }
 
-            await query(`INSERT INTO items (list_id, description, replaceable, created_date) VALUES ${rows.join(',')}`);
+            await query(`INSERT INTO items (list_id, description, quantity, replaceable, created_date) VALUES ${rows.join(',')}`);
             await this.assignPreferredStores(results.insertId, req.body.preferredStores);
             await commit();
 
