@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router';
 import { postUser } from '../actions/users.js';
 import RegistrationForm from '../components/RegistrationForm.js';
 
@@ -28,4 +29,4 @@ const mapDispatchToProps = function(dispatch) {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(RegistrationForm);
+)(withRouter(RegistrationForm));

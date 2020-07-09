@@ -3,7 +3,7 @@ import {AvailableListsScreen} from "../components/AvailableListsScreen";
 import {fetchLists} from "../actions/lists";
 
 const mapStateToProps = state => ({
-    lists: state.lists
+    lists: state.availablelists
 });
 
 const mapDispatchToProps = (dispatch) => {
