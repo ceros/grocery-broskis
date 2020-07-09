@@ -3,7 +3,8 @@ import './app.css';
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import RegistrationForm from "./containers/RegisterUser";
 import ListCreator from "./containers/CreateList";
-import WelcomeScreen from "./components/WelcomeScreen";
+import LandingScreen from "./components/LandingScreen";
+import WelcomeScreen from './components/WelcomeScreen';
 
 /**
  * App component acts as the root for the component tree, loading the layout and all other
@@ -35,10 +36,13 @@ export default class App extends React.Component {
                             <RegistrationForm />
                         </Route>
                         <Route exact path="/">
-                            <WelcomeScreen />
+                            <LandingScreen />
                         </Route>
                         <Route path="/new-list">
                             <ListCreator />
+                        </Route>
+                        <Route path="/welcome">
+                            <WelcomeScreen />
                         </Route>
                     </Switch>
                 </Router>
