@@ -4,11 +4,6 @@ import {Link} from "react-router-dom";
 import Button from '@material-ui/core/Button';
 
 export default withRouter((props) => {
-   if (!props.user) {
-       useHistory().push('/signup');
-       return null;
-   }
-
     return (
         <div>
             <Button className="pronounced" component={Link} to="/new-list"
