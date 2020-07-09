@@ -34,7 +34,6 @@ module.exports = {
     }
   },
   plugins: [
-    new Dotenv(),
     new CleanWebpackPlugin([outputDirectory]),
     new HtmlWebpackPlugin({
       filename: 'index.html',
