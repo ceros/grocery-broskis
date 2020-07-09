@@ -22,15 +22,48 @@ html, body {
     background-color: #402BE9;
 }
 
+.main-header {
+    padding: 10px;
+    font-size: 34px;
+}
+
+.registration-form {
+    padding: 10px;
+    margin: 10px;
+}
+
+.grid-item {
+    padding: 10px;
+    margin: 10px;
+}
+
+.headers {
+    padding: 10px;
+    margin: 10px;
+}
+
 .login {
     text-align: center;
     text-transform: uppercase;
     color: white;
+    padding: 30px;
 }
 
 .logo-container {
     display: flex;
     justify-content: center;
+    padding: 20px;
+}
+
+.about-link {
+    font-size: 10px;
+    text-decoration: underline;
+}
+
+.buttons {
+    padding: 20px;
+    text-decoration-color: white;
+    margin: 10px;
 }
 
 .logo {
