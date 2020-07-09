@@ -1,8 +1,4 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
-import {connect} from 'react-redux';
-import {showList} from '../actions/lists.js';
-import {getCurrentList} from '../reducers/lists.js';
 
 class ShowListScreen extends React.Component { 
 
@@ -12,7 +8,8 @@ class ShowListScreen extends React.Component {
     }
 
 	componentDidMount() {
-        this.props.showList();
+		const { match: { params } } = this.props;
+        this.props.showList(params.id);
     }
 
     onSubmit(event) {
@@ -36,16 +33,4 @@ class ShowListScreen extends React.Component {
 	}
 }
 
-function mapStateToProps(state) {
-	return {
-    	list: getCurrentList(state)
-	}
-}
-
-function mapDispatchToProps(dispatch) {
-	return bindActionCreators({showList: showList}, dispatch);
-}
-
-const showListScreen = connect(mapStateToProps,mapDispatchToProps)(ShowListScreen);
-
-export default showListScreen;
+export default ShowListScreen;
