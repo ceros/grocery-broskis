@@ -25,7 +25,7 @@ export const submitList = (items, budget, deliveryAddress) => (dispatch, getStat
 };
 
 export const SHOW_LIST = 'SHOW_LIST';
-export const showList = (items, budget, deliveryAddress) => (dispatch, getState) => {
+export const showList = () => (dispatch) => {
     //const { list } = getState();
 	const list = { id: 1 };
     return fetch(`${backend}/lists/${list.id}`, {
