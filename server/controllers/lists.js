@@ -17,16 +17,17 @@ class ListController {
         AND longitude BETWEEN ${req.body.longitude - 0.5} AND ${req.body.longitude + 0.5}
     `;
 
-        this.database.query(
-            selectQuery,
-            (err, results) => {
-                if (err) {
-                    return tnext('Failed to select lists');
-                }
-
-                res.json(results); 
+        const query = util.promisify(this.database.query.bind(this.database));
+        try {
+            const lists = await query(selectQuery);
+            for (const list of lists) {
+                list.items = await query(`SELECT * FROM items WHERE list_id = ${list.id}`);
             }
-        );
+
+            res.json(lists);
+        } catch (e) {
+            return next('Failed to select lists');
+        }
     }
 
     async createList(req, res, next) {
