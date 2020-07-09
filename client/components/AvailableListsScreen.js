@@ -18,15 +18,6 @@ export const AvailableListsScreen = withRouter(class extends React.Component {
         };
     }
 
-    async onSubmit() {
-        try {
-            await this.props.onSubmit(this.state.items, this.state.budget, this.state.address, this.state.latitude, this.state.longitude);
-            this.props.history.push('/');
-        } catch (e) {
-            console.error(e);
-        }
-    }
-
     async onSelectAddress(address) {
         let lat, lng;
         const coordinates = await getCoordinatesForAddress(address);
@@ -59,7 +50,7 @@ export const AvailableListsScreen = withRouter(class extends React.Component {
         return (
             <div>
                 {this.props.lists.map((list) => 
-                    <Button component={Link} to={"/shop-list/" + list.id} onClick={this.onSubmit.bind(this)} key={list.id.toString()} variant="contained" color="primary" className="pronounced">
+                    <Button component={Link} to={"/shop-list/" + list.id} key={list.id.toString()} variant="contained" color="primary" className="pronounced">
                         <Typography>{list.address}</Typography>
                         <Typography>Budget: ${list.budget}</Typography>
                         <Typography>Number of items: {list.items.length}</Typography>
