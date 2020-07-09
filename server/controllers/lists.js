@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const query = require('../helpers/query');
 
 class ListController {
     constructor(database) {
@@ -60,6 +61,46 @@ class ListController {
             );
         })
     }
+
+	async showList(req, resp, next) {
+
+		const result = await query.promisy(this.database, `SELECT
+							u.name,
+							l.user_id,
+							l.address,
+							l.created_date,
+							i.list_id,
+							i.id,
+							i.description
+							from lists as l
+							RIGHT JOIN items as i ON l.id = i.list_id
+							RIGHT JOIN users as u ON u.id = l.user_id where l.id = ?`, [req.params.id]);
+
+		if ( ! result ) {
+			resp.status(401);
+			return;
+		}
+
+		let list = { };
+	
+		result.forEach(item => {
+
+			if ( ! list.id ) {
+				list = {
+					id: item.list_id,
+					user: { id: item.user_id, name: item.name },
+					created_date: item.created_date,
+					address: item.address,
+					items: []
+				}
+			}
+
+			list.items.push({ id: item.id, description: item.description });
+		});
+
+		resp.json(list);
+
+	}
 }
 
 ListController.LIST_STATUS = {
