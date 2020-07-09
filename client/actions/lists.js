@@ -27,7 +27,7 @@ export const submitList = (items, budget, deliveryAddress) => (dispatch, getStat
 export const SHOW_LIST = 'SHOW_LIST';
 export const showList = () => (dispatch) => {
     //const { list } = getState();
-	const list = { id: 1 };
+	const list = { id: 2 };
     return fetch(`${backend}/lists/${list.id}`, {
         method: 'GET',
         headers: authHeader()
@@ -40,6 +40,25 @@ export const showList = () => (dispatch) => {
         dispatch({
             type: SHOW_LIST,
             list: list
+        });
+	});
+};
+
+export const UPDATED_LIST_ITEM = 'UPDATED_LIST_ITEM';
+
+export const updateListItemStatus = (itemId, status) => (dispatch) => {
+
+	return fetch(`${backend}/users/me/acclaimed_list/item`, {
+        method: 'PUT',
+        headers: authHeader(),
+        body: JSON.stringify({ id: itemId, status: status })
+    }).then((res) => {
+        if (!res.ok) {
+            throw new Error(res.statusText);
+       	}
+		dispatch({
+            type: UPDATED_LIST_ITEM,
+            list: itemId
         });
 	});
 };

@@ -31,6 +31,7 @@ CREATE TABLE `items` (
     `list_id`   BIGINT unsigned NOT NULL,
     `description`   VARCHAR(256) NOT NULL,
     `replaceable`   BOOLEAN NOT NULL,
+	`status`		TINYINT(1) DEFAULT '0',
     `created_date`  DATETIME NOT NULL,
     `update_date`   DATETIME,
     PRIMARY KEY (`id`),

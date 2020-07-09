@@ -101,6 +101,30 @@ class ListController {
 		resp.json(list);
 
 	}
+
+	async updateItemStatus(req, resp, next) {
+	return;	
+		if (!req.body.item) {
+            return;
+        }
+
+		try {
+		
+			const result = await query.promisy(this.database, `UPDATE items as i
+				 INNER JOIN lists as l ON i.list_id = l.id
+				 INNER JOIN user as u on u.id = l.shopper_id
+                 	SET
+						i.status=?,
+                    	i.update_date=now()
+					WHERE i.id = ? and u.id = ?
+                `, [item.status, item.id, req.user.id ]);
+
+			res.status(204);
+
+		} catch (err) {
+			next('Failed to update list item');
+		}
+	}
 }
 
 ListController.LIST_STATUS = {

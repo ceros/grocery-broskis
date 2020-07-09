@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 import {showList} from '../actions/lists.js';
 import {getCurrentList} from '../reducers/lists.js';
+import ListItem from "./ListItem";
 
 class ShowListScreen extends React.Component { 
 
@@ -26,7 +27,7 @@ class ShowListScreen extends React.Component {
 		if ( list.items && list.items.length > 0 ) {
 			return (<ul className="items">
 				{list.items.map(item => {
-					return <li key={item.id}>{item.description}</li>
+					return <ListItem key={item.id} item={item} />
 				})}
 			</ul>)
 		} else {
