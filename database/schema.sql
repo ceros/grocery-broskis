@@ -16,6 +16,8 @@ CREATE TABLE `lists` (
     `user_id` BIGINT unsigned NOT NULL,
     `shopper_id`    BIGINT unsigned,
     `address`   VARCHAR(512) NOT NULL,
+    `latitude`  DECIMAL(16,13),
+    `longitude`  DECIMAL(16,13),
     `status`    VARCHAR(64) NOT NULL, 
     `budget`    DECIMAL(15,2),
     `created_date`  DATETIME NOT NULL,
