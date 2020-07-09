@@ -3,7 +3,7 @@ import { RECEIVE_USER, RECEIVE_CURRENT_USER, LOGOUT_CURRENT_USER } from '../acti
 export default function users(state = {}, action) {
     switch (action.type) {
         case RECEIVE_USER:
-			return Object.assign({}, state, { [action.user.id]: action.user });
+			return Object.assign({}, state, { user: action.user });
 		case RECEIVE_CURRENT_USER:
 			return {
                 ...state,
