@@ -3,7 +3,6 @@ import { shallow } from 'enzyme';
 import { expect } from 'chai'; 
 import sinon from 'sinon';
 import RegistrationForm from '../../../client/components/RegistrationForm.js';
-import TextField from "@material-ui/core/TextField";
 
 describe('<RegistrationForm />', function() {
 
