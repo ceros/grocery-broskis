@@ -1,7 +1,11 @@
+import {authHeader} from '../helpers/auth-header.js';
+
+const backend = '/api/0.0.0';
+
 export const SUBMIT_LIST = 'SUBMIT_LIST';
 export const submitList = (items, budget, deliveryAddress) => (dispatch, getState) => {
     const { users } = getState();
-    return fetch(`/api/0.0.0/users/${users.user.id}/lists`, {
+    return fetch(`${backend}/users/${users.user.id}/lists`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -18,4 +22,24 @@ export const submitList = (items, budget, deliveryAddress) => (dispatch, getStat
             address: deliveryAddress
         });
     });
+};
+
+export const SHOW_LIST = 'SHOW_LIST';
+export const showList = (items, budget, deliveryAddress) => (dispatch, getState) => {
+    //const { list } = getState();
+	const list = { id: 1 };
+    return fetch(`${backend}/lists/${list.id}`, {
+        method: 'GET',
+        headers: authHeader()
+    }).then((res) => {
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+		return res.json();
+	}).then(list => {
+        dispatch({
+            type: SHOW_LIST,
+            list: list
+        });
+	});
 };
