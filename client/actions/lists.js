@@ -25,10 +25,8 @@ export const submitList = (items, budget, deliveryAddress) => (dispatch, getStat
 };
 
 export const SHOW_LIST = 'SHOW_LIST';
-export const showList = () => (dispatch) => {
-    //const { list } = getState();
-	const list = { id: 1 };
-    return fetch(`${backend}/lists/${list.id}`, {
+export const showList = (id) => (dispatch) => {
+    return fetch(`${backend}/lists/${id}`, {
         method: 'GET',
         headers: authHeader()
     }).then((res) => {
