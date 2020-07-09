@@ -3,14 +3,14 @@ import {authHeader} from '../helpers/auth-header.js';
 const backend = '/api/0.0.0';
 
 export const SUBMIT_LIST = 'SUBMIT_LIST';
-export const submitList = (items, budget, deliveryAddress) => (dispatch, getState) => {
+export const submitList = (items, budget, deliveryAddress, preferredStorePlaceIds) => (dispatch, getState) => {
     const { users } = getState();
     return fetch(`${backend}/users/${users.current.id}/lists`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ items, budget, address: deliveryAddress })
+        body: JSON.stringify({ items, budget, address: deliveryAddress, preferredStores: preferredStorePlaceIds })
     }).then((res) => {
         if (!res.ok) {
             throw new Error(res.statusText);

@@ -76,5 +76,10 @@ module.exports = function(database, config) {
     router.post('/users/:user/lists', listController.createList.bind(listController));
     router.get('/lists/:id', checkSession, listController.showList.bind(listController));
 
+    const StoreController = require('./controllers/stores');
+    const storeController = new StoreController(database);
+
+    router.get('/nearby-stores', storeController.listNearbyStores.bind(storeController));
+
     return router;
 };
