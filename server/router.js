@@ -10,17 +10,32 @@
  * of the api as we make changes and leave past versions still accessible.
  **************************************************************************************************/
 const express = require('express');
+const jwt = require('express-jwt');
 
-module.exports = function(database) {
+module.exports = function(database, config) {
+	const authMiddleware = jwt({secret: config.session.secret, algorithms: ['HS256']});
     const router = express.Router();
+
 
     /******************************************************************************
      *          User REST Routes
      ******************************************************************************/
     const UserController = require('./controllers/users');
     const userController = new UserController(database);
+    const SessionController = require('./controllers/session');
+	const sessionController = new SessionController(config, database);
 
-    // Get a list of all users.
+	const checkSession = async function(request, response, next) {
+		await authMiddleware(request, response, async function() {
+			await sessionController.checkSession(request, response, next);
+		});
+	};
+	
+	router.get('/users/me', checkSession, function(request, response) {
+		userController.currentUser(request, response);
+	});
+
+	// Get a list of all users.
     router.get('/users', function(request, response) {
         userController.getUsers(request, response);
     });
@@ -50,6 +65,10 @@ module.exports = function(database) {
         userController.deleteUser(request, response);
     });
 
+	// Authenticate an user.
+	router.post('/authenticate', function(request, response) {
+		sessionController.authenticate(request, response);
+	});
 
     const ListController = require('./controllers/lists');
     const listController = new ListController(database);

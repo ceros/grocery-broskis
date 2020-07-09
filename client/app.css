@@ -6,7 +6,7 @@ a.pronounced {
     text-align: center;
 }
 
-.registration-form .input {
+.registration-form .input, .login-form .input {
     display: block;
     margin-bottom: 20px;
 }
@@ -20,4 +20,20 @@ a.pronounced {
 
 .address-input * {
     width: 100%;
+}
+
+.logout-form {
+	display: flex;
+}
+
+.logout-form div {
+	display: flex;
+	margin-top: 20px;
+	margin-left: auto;
+}
+
+.logout-form div p {
+	margin: 0;
+	padding: 0;
+	line-height: 20px;
 }
