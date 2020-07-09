@@ -7,26 +7,26 @@ class ListController {
     }
 
     async getListsNearCoordinates(req, res, next) {
-        if (!req.body.latitude || !req.body.longitude){
+        if (!req.params.latitude || !req.params.longitude){
             return;
         }
 
         const selectQuery = `SELECT * FROM lists
         WHERE status="${ListController.LIST_STATUS.UNCLAIMED}"
-        AND latitude BETWEEN ${req.body.latitude - 0.5} AND ${req.body.latitude + 0.5}
-        AND longitude BETWEEN ${req.body.longitude - 0.5} AND ${req.body.longitude + 0.5}
+        AND latitude BETWEEN ${Number(req.params.latitude) - 0.5} AND ${Number(req.params.latitude) + 0.5}
+        AND longitude BETWEEN ${Number(req.params.longitude) - 0.5} AND ${Number(req.params.longitude) + 0.5}
     `;
 
-        this.database.query(
-            selectQuery,
-            (err, results) => {
-                if (err) {
-                    return tnext('Failed to select lists');
-                }
-
-                res.json(results); 
+        const query = util.promisify(this.database.query.bind(this.database));
+        try {
+            const lists = await query(selectQuery);
+            for (const list of lists) {
+                list.items = await query(`SELECT * FROM items WHERE list_id = ${list.id}`);
             }
-        );
+            res.json(lists); 
+        } catch (e) {
+            console.log('Failed to select lists: ' + e);
+        }
     }
 
     async createList(req, res, next) {

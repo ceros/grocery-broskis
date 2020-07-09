@@ -56,18 +56,13 @@ export const AvailableListsScreen = withRouter(class extends React.Component {
             )
         }
 
-        if (Object.keys(this.props.lists).length === 0){
-            return (
-                <CircularProgress></CircularProgress>
-            )
-        }
-
         return (
             <div>
                 {this.props.lists.map((list) => 
-                    <Button component={Link} to="/shop-list" onClick={this.onSubmit.bind(this)} key={list.id.toString()} variant="contained" color="primary" className="pronounced">
+                    <Button component={Link} to={"/shop-list/" + list.id} onClick={this.onSubmit.bind(this)} key={list.id.toString()} variant="contained" color="primary" className="pronounced">
                         <Typography>{list.address}</Typography>
-                        <Typography>Number of items: {list.budget}</Typography>
+                        <Typography>Budget: ${list.budget}</Typography>
+                        <Typography>Number of items: {list.items.length}</Typography>
                     </Button>
 
                 )}

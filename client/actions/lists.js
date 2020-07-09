@@ -25,12 +25,11 @@ export const submitList = (items, budget, deliveryAddress, preferredStorePlaceId
 
 export const SHOW_AVAILABLE_LISTS = 'SHOW_AVAILABLE_LISTS';
 export const fetchLists = (latitude, longitude) => (dispatch, getState) => {
-    return fetch('/api/0.0.0/lists', {
-        method: 'POST',
+    return fetch(`/api/0.0.0/lists/${latitude}/${longitude}`, {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ latitude, longitude })
+        }
     }).then((res) => {
         if (!res.ok) {
             throw new Error(res.statusText);

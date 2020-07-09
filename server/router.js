@@ -75,11 +75,11 @@ module.exports = function(database, config) {
 
     router.post('/users/:user/lists', listController.createList.bind(listController));
 
-    router.post('/lists', function(request, response){
+    router.get('/lists/:latitude/:longitude', function(request, response){
         listController.getListsNearCoordinates(request, response);
     });
 
-    
+
     const StoreController = require('./controllers/stores');
     const storeController = new StoreController(database);
 
