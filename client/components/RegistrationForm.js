@@ -24,12 +24,23 @@ class RegistrationForm extends React.Component {
   onSubmit(event) {
         event.preventDefault();
         const formData = {};
+
+
+
         for (const input of event.target) {
           if (input.name) {
             formData[input.name] = input.value;
           }
         }
 
+        console.log(formData);
+        
+        if (formData.password != formData.confirmPassword) {
+          // TODO make this better
+          window.alert('pass dont match');
+        return;
+        }
+        
         this.props.onSubmit(formData);
     }
 
