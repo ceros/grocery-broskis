@@ -11,6 +11,7 @@ import './app.css';
 import WelcomeScreen from "./containers/WelcomeScreen";
 import ListCreator from "./containers/CreateList";
 import Header from "./containers/Header";
+import ShowList from "./containers/ShowList";
 
 const middlewares = [thunk];
 createStore(usersReducer, applyMiddleware(...middlewares));
@@ -42,6 +43,7 @@ export default class App extends React.Component {
                     <Header />
                     <Router history={history}>
 						<PrivateRoute exact path="/" component={WelcomeScreen} />
+						<PrivateRoute exact path="/shop-list/:id" component={ShowList} />
 						<PrivateRoute exact path="/new-list" component={ListCreator} />
                         <Route path="/register">
                         	<RegisterUser />

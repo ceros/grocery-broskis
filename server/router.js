@@ -74,6 +74,7 @@ module.exports = function(database, config) {
     const listController = new ListController(database);
 
     router.post('/users/:user/lists', listController.createList.bind(listController));
+    router.get('/lists/:id', checkSession, listController.showList.bind(listController));
 
     const StoreController = require('./controllers/stores');
     const storeController = new StoreController(database);

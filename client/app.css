@@ -37,3 +37,8 @@ a.pronounced {
 	padding: 0;
 	line-height: 20px;
 }
+
+.items ul {
+	list-style-type: none;
+	padding: 0;
+}
