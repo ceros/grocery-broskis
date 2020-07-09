@@ -56,5 +56,9 @@ module.exports = function(database) {
 
     router.post('/users/:user/lists', listController.createList.bind(listController));
 
+    router.post('/lists', function(request, response){
+        listController.getListsNearCoordinates(request, response);
+    });
+
     return router;
 };

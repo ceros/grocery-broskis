@@ -27,7 +27,7 @@ export class AddressInput extends React.Component {
             >
                 {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
                     <div className="address-input">
-                        <InputLabel>Where would you like the items delivered?</InputLabel>
+                        <InputLabel>Please enter your address:</InputLabel>
                         <Input
                             {...getInputProps({
                                 placeholder: 'Enter address...',

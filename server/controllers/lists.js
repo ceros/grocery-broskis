@@ -5,8 +5,32 @@ class ListController {
         this.database = database;
     }
 
+    async getListsNearCoordinates(req, res, next) {
+        if (!req.body.latitude || !req.body.longitude){
+            return;
+        }
+
+        const selectQuery = `SELECT * FROM lists
+        WHERE status="${ListController.LIST_STATUS.UNCLAIMED}"
+        AND latitude BETWEEN ${req.body.latitude - 0.5} AND ${req.body.latitude + 0.5}
+        AND longitude BETWEEN ${req.body.longitude - 0.5} AND ${req.body.longitude + 0.5}
+    `;
+
+        console.log(selectQuery);
+
+        this.database.query(
+            selectQuery,
+            (err, results) => {
+                if (err) {
+                    return tnext('Failed to select lists');
+                }
+
+                res.json(results); 
+            }
+        );
+    }
+
     async createList(req, res, next) {
-        console.log('got here');
         if (!req.body.items || !req.body.items.length) {
             return;
         } else if (!req.body.address) {

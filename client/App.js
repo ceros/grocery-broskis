@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import RegistrationForm from "./containers/RegisterUser";
 import WelcomeScreen from "./containers/WelcomeScreen";
 import ListCreator from "./containers/CreateList";
+import AvailableLists from "./containers/AvailableLists";
 
 /**
  * App component acts as the root for the component tree, loading the layout and all other
@@ -41,6 +42,9 @@ export default class App extends React.Component {
                             </Route>
                             <Route path="/new-list">
                                 <ListCreator />
+                            </Route>
+                            <Route path="/lists">
+                                <AvailableLists />
                             </Route>
                         </Switch>
                     </Router>
