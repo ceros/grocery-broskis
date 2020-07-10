@@ -74,6 +74,18 @@ data "aws_ssm_parameter" "database_name" {
   name = "/grocery_run/production/database/app/name"
 }
 
+resource "aws_security_group" "database_security_group" {
+  name = "database_security_group"
+  description = "SecurityGroup for our Database instance."
+  vpc_id = aws_vpc.main_vpc.id
+
+  tags = {
+    Application = "grocery_run"
+    Environment = "production"
+    Resource = "aws_security_group.database_security_group"
+  }
+}
+
 /**
 * A subnet group that places the database in our private subnet.
 */
@@ -100,7 +112,11 @@ resource "aws_db_subnet_group" "database_subnet_group" {
 * given that this is just a prototype, so keeping it simple and small.
 */
 resource "aws_db_instance" "database" {
+  identifier = "grocery-run-database"
   db_subnet_group_name = aws_db_subnet_group.database_subnet_group.id
+  availability_zone = "us-east-1a" 
+  vpc_security_group_ids = [ aws_security_group.database_security_group.id ]
+  final_snapshot_identifier = "grocery-run-final-snapshot"
 
   allocated_storage = 20
   storage_type = "gp2"
