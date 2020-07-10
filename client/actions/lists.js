@@ -66,3 +66,21 @@ export const showList = (id) => (dispatch) => {
         });
 	});
 };
+
+export const UPDATED_LIST_ITEM = 'UPDATED_LIST_ITEM';
+
+export const updateListItemStatus = (id, status) => (dispatch) => {
+	return fetch(`${backend}/users/me/acclaimed_list/item`, {
+        method: 'PUT',
+        headers: Object.assign({}, authHeader(), { 'Content-type': 'application/json' }),
+        body: JSON.stringify({ item: { id, status } })
+    }).then((res) => {
+        if (!res.ok) {
+            throw new Error(res.statusText);
+       	}
+		dispatch({
+            type: UPDATED_LIST_ITEM,
+            item: { id, status }
+        });
+	});
+};

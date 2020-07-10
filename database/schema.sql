@@ -34,6 +34,7 @@ CREATE TABLE `items` (
     `description`   VARCHAR(256) NOT NULL,
     `quantity` VARCHAR(24) NOT NULL,
     `replaceable`   BOOLEAN NOT NULL,
+	`status`		TINYINT(1) DEFAULT '0',
     `created_date`  DATETIME NOT NULL,
     `update_date`   DATETIME,
     PRIMARY KEY (`id`),

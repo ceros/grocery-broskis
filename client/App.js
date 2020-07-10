@@ -45,6 +45,7 @@ export default class App extends React.Component {
                     <Router history={history}>
 						<PrivateRoute exact path="/" component={WelcomeScreen} />
 						<PrivateRoute exact path="/shop-list/:id" component={ShowList} />
+						<PrivateRoute exact path="/acclaimed-shop-list/:id" component={ShowList}  />
 						<PrivateRoute exact path="/new-list" component={ListCreator} />
                         <PrivateRoute exact path="/lists" component={AvailableLists} />
                         <Route path="/register">

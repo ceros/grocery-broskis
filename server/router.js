@@ -74,6 +74,7 @@ module.exports = function(database, config) {
     const listController = new ListController(database);
 
     router.post('/users/:user/lists', listController.createList.bind(listController));
+    router.put('/users/me/acclaimed_list/item', checkSession, listController.updateItemStatus.bind(listController));
     router.get('/lists/:id', checkSession, listController.showList.bind(listController));
 
     router.get('/lists/:latitude/:longitude', function(request, response){

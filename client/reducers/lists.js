@@ -1,4 +1,4 @@
-import { SHOW_LIST } from '../actions/lists.js';
+import { SHOW_LIST, UPDATED_LIST_ITEM } from '../actions/lists.js';
 
 export default function lists(state = { lists: { current: {} } }, action) {
     switch (action.type) {
@@ -7,7 +7,26 @@ export default function lists(state = { lists: { current: {} } }, action) {
                 ...state,
                 current: action.list
             }
-        default:
+        case UPDATED_LIST_ITEM:
+
+			const list = JSON.parse(JSON.stringify(state.current));
+
+			if ( list.items && list.items.length > 0 ) {
+				const {item} = action;
+
+				list.items.map(i => {
+					if ( i.id == item.id ) {
+						i.status = item.status;
+					}
+				});
+			}
+
+			return {
+                ...state,
+                current: list
+            }
+		
+		default:
             return state;
     }
 }

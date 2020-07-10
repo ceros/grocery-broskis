@@ -1,17 +1,21 @@
 import React from 'react';
+import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import { logoutUser } from '../actions/users.js';
+import {getCurrentUser} from '../reducers/users.js';
+import {logout,getMe} from '../actions/users.js';
 import Header from '../components/Header.js';
 
-const mapDispatchToProps = function(dispatch) {
-    return {
-        onSubmit: function() {
-            dispatch(logoutUser());
-        }
-    };
-};
+function mapStateToProps(state) {
+	return {
+    	user: getCurrentUser(state)
+	}
+}
+
+function mapDispatchToProps(dispatch) {
+	return bindActionCreators({getMe: getMe, logout: logout}, dispatch);
+}
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(Header);
