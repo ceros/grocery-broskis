@@ -77,5 +77,10 @@ module.exports = function(database, config) {
     router.put('/users/me/acclaimed_list/item', checkSession, listController.updateItemStatus.bind(listController));
     router.get('/lists/:id', checkSession, listController.showList.bind(listController));
 
+    const StoreController = require('./controllers/stores');
+    const storeController = new StoreController(database);
+
+    router.get('/nearby-stores', storeController.listNearbyStores.bind(storeController));
+
     return router;
 };

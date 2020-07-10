@@ -3,14 +3,14 @@ import {authHeader} from '../helpers/auth-header.js';
 const backend = '/api/0.0.0';
 
 export const SUBMIT_LIST = 'SUBMIT_LIST';
-export const submitList = (items, budget, deliveryAddress) => (dispatch, getState) => {
+export const submitList = (items, budget, deliveryAddress, preferredStorePlaceIds) => (dispatch, getState) => {
     const { users } = getState();
     return fetch(`${backend}/users/${users.current.id}/lists`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ items, budget, address: deliveryAddress })
+        body: JSON.stringify({ items, budget, address: deliveryAddress, preferredStores: preferredStorePlaceIds })
     }).then((res) => {
         if (!res.ok) {
             throw new Error(res.statusText);
@@ -25,10 +25,8 @@ export const submitList = (items, budget, deliveryAddress) => (dispatch, getStat
 };
 
 export const SHOW_LIST = 'SHOW_LIST';
-export const showList = () => (dispatch) => {
-    //const { list } = getState();
-	const list = { id: 2 };
-    return fetch(`${backend}/lists/${list.id}`, {
+export const showList = (id) => (dispatch) => {
+    return fetch(`${backend}/lists/${id}`, {
         method: 'GET',
         headers: authHeader()
     }).then((res) => {
@@ -46,19 +44,18 @@ export const showList = () => (dispatch) => {
 
 export const UPDATED_LIST_ITEM = 'UPDATED_LIST_ITEM';
 
-export const updateListItemStatus = (itemId, status) => (dispatch) => {
-
+export const updateListItemStatus = (id, status) => (dispatch) => {
 	return fetch(`${backend}/users/me/acclaimed_list/item`, {
         method: 'PUT',
-        headers: authHeader(),
-        body: JSON.stringify({ id: itemId, status: status })
+        headers: Object.assign({}, authHeader(), { 'Content-type': 'application/json' }),
+        body: JSON.stringify({ item: { id, status } })
     }).then((res) => {
         if (!res.ok) {
             throw new Error(res.statusText);
        	}
 		dispatch({
             type: UPDATED_LIST_ITEM,
-            list: itemId
+            item: { id, status }
         });
 	});
 };
