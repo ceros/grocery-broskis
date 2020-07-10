@@ -83,11 +83,14 @@ export const loginUser = function(user) {
 
 }
 
-export const logoutUser = function() {
-	return function(dispatch) {
-		localStorage.removeItem('user');
-		history.push('/login');
+const logoutUser = function() {
+	localStorage.removeItem('user');
+	history.push('/login');
+}
 
+export const logout = function() {
+	return function(dispatch) {
+		logoutUser();
 		if ( dispatch ) {
 			dispatch(logoutCurrentUser());
 		}
@@ -123,7 +126,7 @@ function handleResponse(response) {
         const data = text && JSON.parse(text);
         if (!response.ok) {
             if (response.status === 401) {
-                logoutUser()();
+                logoutUser();
             }
 
             const message = (data && data.message) || response.statusText;
