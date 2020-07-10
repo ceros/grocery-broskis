@@ -25,9 +25,12 @@ html, body {
 .main-header {
     padding: 10px;
     font-size: 34px;
+    text-align: center;
+    text-transform: uppercase;
+    color: white;
 }
 
-.registration-form {
+.form {
     padding: 10px;
     margin: 10px;
 }
@@ -42,7 +45,7 @@ html, body {
     margin: 10px;
 }
 
-.login {
+.main {
     text-align: center;
     text-transform: uppercase;
     color: white;
@@ -55,21 +58,11 @@ html, body {
     padding: 20px;
 }
 
-.about-link {
+.text-link {
     font-size: 10px;
     text-decoration: underline;
 }
 
-.registration-form .input, .login-form .input {
-    display: block;
-    margin-bottom: 20px;
-}
-
-.buttons {
-    padding: 20px;
-    text-decoration-color: white;
-    margin: 10px;
-}
 
 .logo {
     width: 196px;
@@ -92,4 +85,9 @@ html, body {
 	margin: 0;
 	padding: 0;
 	line-height: 20px;
+}
+
+.items ul {
+	list-style-type: none;
+	padding: 0;
 }

@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 import Button from '@material-ui/core/Button';
 
 export default withRouter((props) => {
+    console.log("Welcome got called");
     return (
         <div>
             <Button className="pronounced" component={Link} to="/new-list"

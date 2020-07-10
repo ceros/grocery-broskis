@@ -24,12 +24,12 @@ class Header extends React.Component {
 		const {user} = this.props;
 
 		if(!user.name) {
-			return <h1>Grocery</h1>;
+			return <h1 className="main-header">Groceros</h1>;
 		}
 
         return (
             <form onSubmit={this.onSubmit} className="logout-form">
-				<h1>Grocery</h1>
+				<h1 className="main-header">Groceros</h1>
 				<div className="user">
 					<p>Welcome <strong>{user.name}</strong> | <input type="submit" name="logout" value="Logout" /></p>
 				</div>

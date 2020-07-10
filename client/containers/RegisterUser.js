@@ -1,7 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router';
 import { postUser } from '../actions/users.js';
 import RegistrationForm from '../components/RegistrationForm.js';
+import {BrowserRouter} from 'react-router-dom';
+
+<BrowserRouter forceRefresh={true} />
 
 const mapStateToProps = state => ({
     user: state.users.user
@@ -28,4 +32,4 @@ const mapDispatchToProps = function(dispatch) {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(RegistrationForm);
+)(withRouter(RegistrationForm));

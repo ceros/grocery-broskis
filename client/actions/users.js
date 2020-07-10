@@ -74,7 +74,6 @@ export const loginUser = function(user) {
             return session;
         })
         .then(function(session) {
-			history.push('/');
 			dispatch(getMe());
         }).catch(function(err) {
 			console.log(err);
@@ -86,7 +85,7 @@ export const loginUser = function(user) {
 export const logoutUser = function() {
 	return function(dispatch) {
 		localStorage.removeItem('user');
-		history.push('/login');
+		history.push('/');
 
 		if ( dispatch ) {
 			dispatch(logoutCurrentUser());

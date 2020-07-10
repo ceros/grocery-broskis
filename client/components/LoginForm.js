@@ -3,6 +3,9 @@ import {connect} from 'react-redux';
 import {history} from '../helpers/history.js';
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import {Link} from "react-router-dom";
+import Grid from '@material-ui/core/Grid';
+
 
 class LoginForm extends React.Component { 
 
@@ -11,7 +14,7 @@ class LoginForm extends React.Component {
         this.onSubmit = this.onSubmit.bind(this);
     }
 
-    onSubmit(event) {
+    async onSubmit(event) {
         event.preventDefault();
 
 		const formData = {};
@@ -20,17 +23,39 @@ class LoginForm extends React.Component {
             formData[input.name] = input.value;
           }
         }
-        this.props.onSubmit(formData);
+       await this.props.onSubmit(formData);
+       this.props.history.push("/welcome");
     }
 
     render() {
+        console.log("Login called");
         return (
-            <form onSubmit={this.onSubmit} className="login-form">
-                <TextField className="input" type="text" name="email" label="Email" />
-                <TextField className="input" type="password" name="password" label="Password" />
-                <Button type="submit" color="primary" variant="contained">Login</Button>
-				<Button type="button" onClick={() => history.push('/signup')}>Register</Button>
-            </form>
+            <div className="main">
+            <Grid container direction="column" justify="space-around" alignItems="center">               
+                <form onSubmit={this.onSubmit} className="form">
+                    <div className="grid-item"> 
+                        <Grid item md>
+                        <TextField className="input" type="text" name="email" label="Email" />
+                        </Grid>
+                    </div>
+                    <div className="grid-item"> 
+                        <Grid item md>
+                        <TextField className="input" type="password" name="password" label="Password" />
+                        </Grid>
+                    </div>
+                    <div className="grid-item"> 
+                        <Grid item md>
+                        <Button type="submit" variant="outlined" color="inherit" className="buttons" size="large">Login</Button> 
+                        </Grid>
+                    </div>
+                </form>
+                <div className="grid-item text-link"> 
+                    <Grid item md>
+                    <Button variant="text" color="inherit" className="buttons" size="large" component={Link} to="/signup">I Need to Create An Account</Button>
+                    </Grid>
+                </div>
+            </Grid>
+            </div>
         );
     }
 }

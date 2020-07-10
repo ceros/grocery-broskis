@@ -4,9 +4,9 @@ import {submitList} from "../actions/lists";
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        async onSubmit(listItems, budget, address, preferredStorePlaceIds) {
+        async onSubmit(listItems, budget, address, preferredStorePlaceIds, latitude, longitude) {
             if (listItems && listItems.length) {
-                await dispatch(submitList(listItems, budget, address, preferredStorePlaceIds));
+                await dispatch(submitList(listItems, budget, address, preferredStorePlaceIds, latitude, longitude));
             }
         }
     }

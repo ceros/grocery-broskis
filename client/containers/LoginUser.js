@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { loginUser } from '../actions/users.js';
 import LoginForm from '../components/LoginForm.js';
+import {withRouter} from 'react-router';
 
 const mapDispatchToProps = function(dispatch) {
     return {
@@ -23,4 +24,4 @@ const mapDispatchToProps = function(dispatch) {
 export default connect(
     null,
     mapDispatchToProps
-)(LoginForm);
+)(withRouter(LoginForm));
