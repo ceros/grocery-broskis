@@ -20,7 +20,7 @@ class ShowListScreen extends React.Component {
     render() {
 		const {list} = this.props;
 		const { match: { url } } = this.props;
-		const isAcclaimedList = /^\/acclaimed-shop-list\/\d+/.test(url);
+		const isAcclaimedList = true;
 		
 		if ( list.items && list.items.length > 0 ) {
 			return (

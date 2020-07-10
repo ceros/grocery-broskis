@@ -44,6 +44,7 @@ a.pronounced {
 }
 
 .list-item {
+	cursor: pointer;
 	line-height: 20px;
 }
 
