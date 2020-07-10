@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import NumberFormat from 'react-number-format';
 import {withRouter} from 'react-router';
 import {AddressInput} from "./AddressInput";
+import {getCoordinatesForAddress} from "../utils/geocoding";
 import {StoreSelection} from "./StoreSelection";
 
 export const ListCreationForm = withRouter(class extends React.Component {
@@ -16,7 +17,9 @@ export const ListCreationForm = withRouter(class extends React.Component {
             items: [],
             budget: 0,
             userAddress: '',
-            preferredStores: undefined
+            preferredStores: undefined,
+            latitude: undefined,
+            longitude: undefined
         };
     }
 
@@ -54,11 +57,25 @@ export const ListCreationForm = withRouter(class extends React.Component {
 
     async onSubmit() {
         try {
-            await this.props.onSubmit(this.state.items, this.state.budget, this.state.userAddress, this.state.preferredStores);
+            await this.props.onSubmit(this.state.items, this.state.budget, this.state.userAddress, this.state.preferredStores, this.state.latitude, this.state.longitude);
             this.props.history.push('/');
         } catch (e) {
             console.error(e);
         }
+    }
+
+    async onSelectAddress(address) {
+        let lat, lng;
+        const coordinates = await getCoordinatesForAddress(address);
+        if (coordinates){
+            lat = coordinates.lat;
+            lng = coordinates.lng;
+        }
+        this.setState({ 
+            userAddress : address,
+            latitude : lat,
+            longitude : lng
+        });
     }
 
     onStoreSelect(preferredStores) {
@@ -68,7 +85,7 @@ export const ListCreationForm = withRouter(class extends React.Component {
     render() {
         if (!this.state.userAddress) {
             return (
-                <AddressInput onSelect={(address) => this.setState({ userAddress: address })}></AddressInput>
+                <AddressInput onSelect={this.onSelectAddress.bind(this)}></AddressInput>
             );
         } else if (this.state.preferredStores === undefined) {
           return <StoreSelection userAddress={this.state.userAddress} onComplete={this.onStoreSelect.bind(this)}></StoreSelection>;

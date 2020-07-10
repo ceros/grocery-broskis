@@ -6,6 +6,29 @@ class ListController {
         this.database = database;
     }
 
+    async getListsNearCoordinates(req, res, next) {
+        if (!req.params.latitude || !req.params.longitude){
+            return;
+        }
+
+        const selectQuery = `SELECT * FROM lists
+        WHERE status="${ListController.LIST_STATUS.UNCLAIMED}"
+        AND latitude BETWEEN ${Number(req.params.latitude) - 0.5} AND ${Number(req.params.latitude) + 0.5}
+        AND longitude BETWEEN ${Number(req.params.longitude) - 0.5} AND ${Number(req.params.longitude) + 0.5}
+    `;
+
+        const query = util.promisify(this.database.query.bind(this.database));
+        try {
+            const lists = await query(selectQuery);
+            for (const list of lists) {
+                list.items = await query(`SELECT * FROM items WHERE list_id = ${list.id}`);
+            }
+            res.json(lists); 
+        } catch (e) {
+            console.log('Failed to select lists: ' + e);
+        }
+    }
+
     async createList(req, res, next) {
         if (!req.body.items || !req.body.items.length) {
             return;
@@ -26,8 +49,10 @@ class ListController {
                     created_date=now(),
                     status="${ListController.LIST_STATUS.UNCLAIMED}",
                     budget=?,
-                    address=?
-                `, [req.params.user, req.body.budget || null, req.body.address]
+                    address=?,
+                    latitude=?,
+                    longitude=?
+                `, [req.params.user, req.body.budget || null, req.body.address, req.body.latitude, req.body.longitude]
             );
 
             const rows = [];
@@ -36,10 +61,10 @@ class ListController {
                     throw new Error('All list items must have quantities and descriptions');
                 }
 
-                rows.push(`(${results.insertId}, ${mysql.escape(item.description)}, ${!!item.replaceable || false}, now())`);
+                rows.push(`(${results.insertId}, ${mysql.escape(item.description)}, ${mysql.escape(item.quantity)}, ${!!item.replaceable || false}, now())`);
             }
 
-            await query(`INSERT INTO items (list_id, description, replaceable, created_date) VALUES ${rows.join(',')}`);
+            await query(`INSERT INTO items (list_id, description, quantity, replaceable, created_date) VALUES ${rows.join(',')}`);
             await this.assignPreferredStores(results.insertId, req.body.preferredStores);
             await commit();
 

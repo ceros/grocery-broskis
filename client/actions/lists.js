@@ -3,14 +3,14 @@ import {authHeader} from '../helpers/auth-header.js';
 const backend = '/api/0.0.0';
 
 export const SUBMIT_LIST = 'SUBMIT_LIST';
-export const submitList = (items, budget, deliveryAddress, preferredStorePlaceIds) => (dispatch, getState) => {
+export const submitList = (items, budget, deliveryAddress, preferredStorePlaceIds, latitude, longitude) => (dispatch, getState) => {
     const { users } = getState();
     return fetch(`${backend}/users/${users.current.id}/lists`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ items, budget, address: deliveryAddress, preferredStores: preferredStorePlaceIds })
+        body: JSON.stringify({ items, budget, address: deliveryAddress, preferredStores: preferredStorePlaceIds, latitude, longitude })
     }).then((res) => {
         if (!res.ok) {
             throw new Error(res.statusText);
@@ -19,7 +19,31 @@ export const submitList = (items, budget, deliveryAddress, preferredStorePlaceId
         dispatch({
             type: SUBMIT_LIST,
             items,
-            address: deliveryAddress
+            address: deliveryAddress,
+            latitude,
+            longitude
+        });
+    });
+};
+
+
+export const SHOW_AVAILABLE_LISTS = 'SHOW_AVAILABLE_LISTS';
+export const fetchLists = (latitude, longitude) => (dispatch, getState) => {
+    return fetch(`/api/0.0.0/lists/${latitude}/${longitude}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then((res) => {
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+
+        return res.json();
+    }).then((results) => {
+        dispatch({
+            type: SHOW_AVAILABLE_LISTS,
+            results
         });
     });
 };
@@ -33,7 +57,8 @@ export const showList = (id) => (dispatch) => {
         if (!res.ok) {
             throw new Error(res.statusText);
         }
-		return res.json();
+
+        return res.json();
 	}).then(list => {
         dispatch({
             type: SHOW_LIST,
