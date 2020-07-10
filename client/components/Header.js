@@ -1,8 +1,4 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
-import {connect} from 'react-redux';
-import {getMe} from '../actions/users.js';
-import {getCurrentUser} from '../reducers/users.js';
 
 class Header extends React.Component { 
 
@@ -17,7 +13,7 @@ class Header extends React.Component {
 
     onSubmit(event) {
         event.preventDefault();
-        this.props.onSubmit(this.state);
+		this.props.logout();
     }
 
     render() {
@@ -38,16 +34,4 @@ class Header extends React.Component {
     }
 }
 
-function mapStateToProps(state) {
-	return {
-    	user: getCurrentUser(state)
-	}
-}
-
-function mapDispatchToProps(dispatch) {
-	return bindActionCreators({getMe: getMe}, dispatch);
-}
-
-const header = connect(mapStateToProps,mapDispatchToProps)(Header);
-
-export default header;
+export default Header;
