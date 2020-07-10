@@ -6,9 +6,8 @@ import ShowListScreen from '../components/ShowListScreen.js';
 
 
 function mapStateToProps(state) {
-	return {
-    	list: getCurrentList(state)
-	}
+	const list = getCurrentList(state);
+	return { list }
 }
 
 function mapDispatchToProps(dispatch) {
