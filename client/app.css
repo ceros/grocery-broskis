@@ -42,3 +42,26 @@ a.pronounced {
 	list-style-type: none;
 	padding: 0;
 }
+
+.list-item {
+	line-height: 20px;
+}
+
+.list-item span.icon {
+	display: inline-block;
+	width: 25px;
+	text-align: center;
+}
+.list-item.completed span.icon {
+	color: #1daa1f;
+}
+
+.list-item.completed span {
+	text-decoration: line-through;
+	font-style: italic;
+}
+
+.list-item.out-of-stock span {
+	font-style: italic;
+	color: #b9b9b9
+}
