@@ -1,7 +1,7 @@
 import users from './users.js'
 
 const initialState = {
-    users: {}
+	users: { current: {} }
 };
 
 export default function rootReducer(state = initialState, action) {

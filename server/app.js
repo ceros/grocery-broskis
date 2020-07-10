@@ -13,26 +13,15 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mysql = require('mysql');
 
-// Load our configuration file.  Loads the index.js file from the config/ directory which
-// then uses the NODE_ENV variable to determine what environment we're running in and
-// load the appropriate configuration.  Configuration is a Javascript object containing
-// the configuration values.
-//
-// For sturcture, see config/default.js
-console.log('Loading config...');
-var config = require('./config');
-
-
-// Initialize the database connection with settings from our configuration file.
+// Initialize the database connection with settings from our environment configuration.
 console.log('Connecting to the database...');
 var connection = mysql.createConnection({
-    host: config.database.host,
-    user: config.database.user,
-    password: config.database.password,
-    database: config.database.name 
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME 
 });
 connection.connect();
-
 
 // Load express.
 var app = express();
@@ -68,7 +57,7 @@ console.log('Serving static content from ' + static_path + '.');
 
 
 // Get the api router, pre-wired up to the controllers.
-const router = require('./router')(connection, config);
+const router = require('./router')(connection, { session: { secret: process.env.SESSION_SECRET, expiresIn: process.env.SESSION_EXPIRES_IN } });
 
 
 // Load our router at the ``/api/v0/`` route.  This allows us to version our api. If,

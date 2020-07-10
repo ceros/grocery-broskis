@@ -60,6 +60,11 @@ html, body {
     text-decoration: underline;
 }
 
+.registration-form .input, .login-form .input {
+    display: block;
+    margin-bottom: 20px;
+}
+
 .buttons {
     padding: 20px;
     text-decoration-color: white;
@@ -71,4 +76,20 @@ html, body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.logout-form {
+	display: flex;
+}
+
+.logout-form div {
+	display: flex;
+	margin-top: 20px;
+	margin-left: auto;
+}
+
+.logout-form div p {
+	margin: 0;
+	padding: 0;
+	line-height: 20px;
 }

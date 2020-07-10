@@ -1,83 +1,132 @@
 import users from '../../../client/reducers/users.js';
-import { RECIEVE_USER } from '../../../client/actions/users.js';
+import { RECIEVE_USER, RECIEVE_CURRENT_USER, LOGOUT_CURRENT_USER } from '../../../client/actions/users.js';
 import { expect } from 'chai';
 
 
 describe('reducers', function() {
-    it('RECIEVE_USER should update state when recieving first user', function() {
-        let user = {
-            id: 1,
-            name: 'John Doe',
-            email: 'john.doe@email.com'
-        };
 
-        let action = {
-            type: RECIEVE_USER,
-            user: user
-        };
+	describe('RECIEVE_USER', function() {
 
-        let initialState = {};
-        let expectedState = {
-            1: user
-        };
+  	  it('RECIEVE_USER should update state when recieving first user', function() {
+    	    let user = {
+        	    id: 1,
+            	name: 'John Doe',
+            	email: 'john.doe@email.com'
+        	};
 
-        expect(users(initialState, action)).to.eql(expectedState);
-    });
+       		let action = {
+            	type: RECIEVE_USER,
+           		user: user
+        	};
 
-    it('RECIEVE_USER should update state when recieving additional users', function() {
+        	let initialState = {};
+        	let expectedState = {
+            	1: user
+        	};
 
-        let user = {
-            id: 2,
-            name: 'Jane Doe',
-            email: 'jane.doe@email.com'
-        };
-        let action = {
-            type: RECIEVE_USER,
-            user: user
-        };
+        	expect(users(initialState, action)).to.eql(expectedState);
+    	});
 
-        let initialState = {
-            1: {
-                id: 1,
-                name: 'John Doe',
-                email: 'john.doe@email.com'
-            }
-        };
-        let expectedState = {
-            1: {
-                id: 1,
-                name: 'John Doe',
-                email: 'john.doe@email.com'
-            },
-            2: user
-        };
+    	it('RECIEVE_USER should update state when recieving additional users', function() {
 
-        expect(users(initialState, action)).to.eql(expectedState);
+        	let user = {
+            	id: 2,
+            	name: 'Jane Doe',
+            	email: 'jane.doe@email.com'
+        	};
+        	let action = {
+            	type: RECIEVE_USER,
+            	user: user
+        	};
+
+        	let initialState = {
+            	1: {
+                	id: 1,
+                	name: 'John Doe',
+               		email: 'john.doe@email.com'
+            	}
+        	};
+        	let expectedState = {
+            	1: {
+               		id: 1,
+                	name: 'John Doe',
+                	email: 'john.doe@email.com'
+            	},
+           		2: user
+        	};
+
+        	expect(users(initialState, action)).to.eql(expectedState);
 
 
-        let user2 = {
-            id: 3,
-            name: 'Jim Doe',
-            email: 'jim.doe@email.com'
-        };
+       		let user2 = {
+            	id: 3,
+            	name: 'Jim Doe',
+            	email: 'jim.doe@email.com'
+        	};
 
-        let action2 = {
-            type: RECIEVE_USER,
-            user: user2
-        };
+        	let action2 = {
+            	type: RECIEVE_USER,
+            	user: user2
+        	};
 
-        let expectedState2 = {
-            1: {
-                id: 1,
-                name: 'John Doe',
-                email: 'john.doe@email.com'
-            },
-            2: user,
-            3: user2 
-        };
+        	let expectedState2 = {
+            	1: {
+                	id: 1,
+                	name: 'John Doe',
+                	email: 'john.doe@email.com'
+            	},
+           		2: user,
+            	3: user2 
+        	};
 
-        let interimState = users(initialState, action);
-        expect(users(interimState, action2)).to.eql(expectedState2);
-    });
+        	let interimState = users(initialState, action);
+        	expect(users(interimState, action2)).to.eql(expectedState2);
+    	});
+	});
+
+	describe('RECIEVE_CURRENT_USER', function() {
+
+		it('Should update state when recieving user', function() {
+    	    let user = {
+        	    id: 1,
+            	name: 'John Doe',
+            	email: 'john.doe@email.com'
+        	};
+
+       		let action = {
+            	type: RECIEVE_CURRENT_USER,
+           		user: user
+        	};
+
+        	let initialState = { current: {}};
+        	let expectedState = {
+            	current: user
+        	};
+
+        	expect(users(initialState, action)).to.eql(expectedState);
+    	});
+	});
+
+	describe('LOGOUT_CURRENT_USER', function() {
+
+		it('Should update state when logout user', function() {
+    	    let user = {
+        	    id: 1,
+            	name: 'John Doe',
+            	email: 'john.doe@email.com'
+        	};
+
+       		let action = {
+            	type: LOGOUT_CURRENT_USER,
+        	};
+
+        	let initialState = { current: user };
+        	let expectedState = {
+            	current: {}
+        	};
+
+        	expect(users(initialState, action)).to.eql(expectedState);
+    	});
+	});
 });
 

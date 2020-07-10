@@ -8,7 +8,7 @@
     "build": "webpack --mode production",
     "client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
     "server": "nodemon ./server/bin/www",
-    "dev": "export NODE_ENV=hot-dev && concurrently \"npm run server\" \"npm run client\"",
+    "dev": "set -o allexport && source hot-dev.env && set +o allexport && concurrently \"npm run server\" \"npm run client\"",
     "test": "mocha --require @babel/register --preset babel --file test/setup.js 'test/**/*.spec.js'"
   },
   "dependencies": {
@@ -18,10 +18,11 @@
     "cookie-parser": "~1.4.3",
     "date-fns": "^2.14.0",
     "debug": "~2.6.9",
-    "dotenv-webpack": "^1.8.0",
     "express": "~4.16.0",
+    "express-jwt": "^6.0.0",
     "hbs": "^4.1.0",
     "http-errors": "~1.6.2",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.10",
     "material-table": "^1.64.0",
     "morgan": "~1.9.0",

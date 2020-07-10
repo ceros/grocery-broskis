@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import NumberFormat from 'react-number-format';
 import {withRouter} from 'react-router';
 import {AddressInput} from "./AddressInput";
+import {StoreSelection} from "./StoreSelection";
 
 export const ListCreationForm = withRouter(class extends React.Component {
     constructor() {
@@ -14,7 +15,8 @@ export const ListCreationForm = withRouter(class extends React.Component {
         this.state = {
             items: [],
             budget: 0,
-            address: ''
+            userAddress: '',
+            preferredStores: undefined
         };
     }
 
@@ -52,18 +54,24 @@ export const ListCreationForm = withRouter(class extends React.Component {
 
     async onSubmit() {
         try {
-            await this.props.onSubmit(this.state.items, this.state.budget, this.state.address);
+            await this.props.onSubmit(this.state.items, this.state.budget, this.state.userAddress, this.state.preferredStores);
             this.props.history.push('/');
         } catch (e) {
             console.error(e);
         }
     }
 
+    onStoreSelect(preferredStores) {
+      this.setState({ preferredStores })
+    }
+
     render() {
-        if (!this.state.address) {
+        if (!this.state.userAddress) {
             return (
-                <AddressInput onSelect={(address) => this.setState({ address })}></AddressInput>
+                <AddressInput onSelect={(address) => this.setState({ userAddress: address })}></AddressInput>
             );
+        } else if (this.state.preferredStores === undefined) {
+          return <StoreSelection userAddress={this.state.userAddress} onComplete={this.onStoreSelect.bind(this)}></StoreSelection>;
         }
 
         return (

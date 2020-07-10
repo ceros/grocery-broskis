@@ -1,64 +1,36 @@
-import axios from 'axios';
-import GOOGLE_API_KEY from '../config/development';
-
-const SEARCH_RADIUS_IN_METERS = 500;
+const axios = require('axios');
 
 module.exports = class LocationService {
-    constructor() {}
+    constructor() {
+        this.storeTypes = [
+            "supermarket",
+            "grocery_or_supermarket",
+            "convenience_store"
+        ];
+    }
 
-    async isNearAStore() {
-        const userLocation = await this.getUserLocation();
-        if (!userLocation){
-            return false;
-        }
-        const nearbyStores = await this.findNearbyStores(userLocation.lat, userLocation.lng);
+    async isNearAStore(location) {
+        const nearbyStores = await this.findNearbyStores(location);
         return nearbyStores && nearbyStores.length > 0;
     }
 
-    async getUserLocation() {
-        try {
-            const response = await axios.post('https://www.googleapis.com/geolocation/v1/geolocate?key=' + GOOGLE_API_KEY);
-            return response.data;
-        }
-        catch (error) {
-            console.log(error);
-            return null;
-        }
-    }
-
-    async findNearbyStores(latitude, longitude){
-        const nearbyGroceryStoresUrl = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=${GOOGLE_API_KEY}&inputtype=textquery&input=grocery&fields=name,types&locationbias=circle:${SEARCH_RADIUS_IN_METERS}@${latitude},${longitude}`;
+    async findNearbyStores(coordinates) {
+        const nearbyGroceryStoresUrls = this.storeTypes.map(
+          type => `https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=${process.env.GOOGLE_API_KEY}&location=${encodeURIComponent(coordinates)}&type=${type}&rankby=distance`
+        );
 
         try {
-            let validResults = [];
-
-            const response = await axios.post(nearbyGroceryStoresUrl);
-
-            // this is the status of the actual http response
-            if (response.status !== 200){
-                console.log("Status: " + response.status);
-                return validResults;
+            const stores = await Promise.all(nearbyGroceryStoresUrls.map(async url => axios.post(url)));
+            const flattenedStores = stores.flat().map(result => result.data && result.data.results).flat();
+            const storesByPlaceId = {};
+            for (const store of flattenedStores) {
+                storesByPlaceId[store.place_id] = store;
             }
 
-            // this is the google api's status field
-            if (response.data.status !== "OK"){
-                console.log("Status: " + response.data.status);
-                return validResults;
-            }
-
-            for (const candidate of response.data.candidates){
-                const types = candidate.types;
-                if (types.includes("supermarket") ||
-                    types.includes("grocery_or_supermarket") ||
-                    types.includes("convenience_store")){
-                        validResults.push(candidate);
-                    }
-            }
-
-            return validResults;
+            return Object.values(storesByPlaceId);
         }
         catch (error) {
-            console.log(error);
+            console.error(error);
             return [];
         }
     }

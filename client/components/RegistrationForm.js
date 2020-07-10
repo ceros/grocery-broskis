@@ -1,48 +1,45 @@
 import React from 'react';
+import {connect} from 'react-redux';
+import {history} from '../helpers/history.js';
+import { postUser } from '../actions/users.js';
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Grid from '@material-ui/core/Grid';
 import {withRouter} from 'react-router';
 
 class RegistrationForm extends React.Component { 
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
+    };
 
-      this.onSubmit = this.onSubmit.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
 
-      this.state = {
-          user: props.user
-        };
-    }
+  handleInputChange(event) {
+    const name = event.target.name;
+    const value = event.target.value;
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-      if (this.props.user) {
-        this.props.history.push('/');
-      }
-    }
+    this.setState({
+      [name]:  value
+    });
+  }
 
   onSubmit(event) {
-        event.preventDefault();
-        const formData = {};
+    event.preventDefault();
+    this.props.onSubmit(this.state);
+  }
 
-
-
-        for (const input of event.target) {
-          if (input.name) {
-            formData[input.name] = input.value;
-          }
-        }
-
-        console.log(formData);
-        
-        if (formData.password != formData.confirmPassword) {
-          // TODO make this better
-          window.alert('pass dont match');
-        return;
-        }
-        
-        this.props.onSubmit(formData);
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.user) {
+      this.props.history.push('/');
     }
+  }
 
     render() {
         return (
@@ -57,27 +54,32 @@ class RegistrationForm extends React.Component {
             <form onSubmit={this.onSubmit} className="registration-form">
               <div className="grid-item">
                 <Grid item md>
-                <TextField type="text" name="name" label="Name" />
+                <TextField type="text" name="name" label="Name" onChange={this.handleInputChange}/>
                 </Grid>
               </div>
               <div className="grid-item">
                 <Grid item md>
-                <TextField type="text" name="email" label="Email" />
+                <TextField type="text" name="email" label="Email" onChange={this.handleInputChange}/>
                 </Grid>
               </div>
                 <div className="grid-item">
                 <Grid item md>
-                <TextField type="password" name="password" label="Password" />
+                <TextField type="password" name="password" label="Password" onChange={this.handleInputChange}/>
                 </Grid>
               </div>
               <div className="grid-item">
                 <Grid item md>
-                <TextField type="password" name="confirmPassword" label="Confirm" />
+                <TextField type="password" name="confirmPassword" label="Confirm" onChange={this.handleInputChange}/>
                 </Grid>
               </div>
               <div className="grid-item">
                 <Grid item md>
                 <Button type="submit" variant="outlined" color="inherit" className="buttons" size="large">Submit</Button>
+                </Grid>
+              </div>
+              <div className="grid-item">
+                <Grid item md>
+                <Button type="button" variant="outlined" color="inherit" className="buttons" size="large" onClick={() => history.push('/login')}>Login</Button>
                 </Grid>
               </div>
             </form>
