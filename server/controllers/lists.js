@@ -75,7 +75,8 @@ class ListController {
 							l.created_date,
 							i.list_id,
 							i.id,
-							i.description
+							i.description,
+							i.status
 							from lists as l
 							RIGHT JOIN items as i ON l.id = i.list_id
 							RIGHT JOIN users as u ON u.id = l.user_id where l.id = ?`, [req.params.id]);
@@ -100,33 +101,36 @@ class ListController {
 				}
 			}
 
-			list.items.push({ id: item.id, description: item.description });
+			list.items.push({ id: item.id, description: item.description, status: item.status });
 		});
 
 		resp.json(list);
 
 	}
 
-	async updateItemStatus(req, resp, next) {
-	return;	
+	async updateItemStatus(req, res, next) {
 		if (!req.body.item) {
+			res.status(400).json({ message: 'no item'});
             return;
         }
 
 		try {
-		
-			const result = await query.promisy(this.database, `UPDATE items as i
+			const { item } = req.body;
+			const query = util.promisify(this.database.query.bind(this.database));
+
+			const result = await query(`UPDATE items as i
 				 INNER JOIN lists as l ON i.list_id = l.id
-				 INNER JOIN user as u on u.id = l.shopper_id
+				 INNER JOIN users as u on u.id = l.shopper_id
                  	SET
 						i.status=?,
                     	i.update_date=now()
 					WHERE i.id = ? and u.id = ?
                 `, [item.status, item.id, req.user.id ]);
 
-			res.status(204);
+			res.status(204).end();
 
 		} catch (err) {
+			console.log(err);
 			next('Failed to update list item');
 		}
 	}
